@@ -69,22 +69,22 @@ public class Board {
         return size;
     }
 
-    public Figure findFigure(Figure figureType, Integer column, Integer row) {
+    public Figure findFigure(String figureType, Integer column, Integer row, boolean isWhite) {
         Figure figure = null;
 
         for (int i = 0; i < field.length; i++) {
             for (int j = 0; j < field.length; j++) {
                 Figure foundedFigure = field[i][j].get();
-                // TODO: foundedFigure.getClass().isInstance(figureType) vobec netusim ci to ide
-                if(foundedFigure != null && foundedFigure.getClass().isInstance(figureType)) {
-                    // TODO
-                    /*
-                    if(column != null && column.intValue() == figure.getColumn()) {
+
+                if(foundedFigure != null && foundedFigure.isWhite() == isWhite
+                    && foundedFigure.getFigureChar().equals(figureType)) {
+
+                    if(column != null && column.intValue() == figure.getField().getCol()) {
                         figure = foundedFigure;
-                    } else if(row != null && row.intValue() == figure.getRow()) {
+                    } else if(row != null && row.intValue() == figure.getField().getRow()) {
                         figure = foundedFigure;
                     }
-                     */
+
                 }
             }
         }

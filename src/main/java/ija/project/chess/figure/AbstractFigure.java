@@ -11,44 +11,47 @@ public abstract class AbstractFigure implements Figure{
     protected String figureChar;
     protected ImageView image;
 
-    public AbstractFigure() {
+    public AbstractFigure(String figureChar, boolean isWhite) {
+        this.figureChar = figureChar;
+        this.isWhite = isWhite;
+
         switch(figureChar) {
-            case "P":
+            case "p":
                 if(isWhite) {
                     image = new ImageView("images/wpawn.png");
                 } else {
                     image = new ImageView("images/bpawn.png");
                 }
                 break;
-            case "Ki":
+            case "K":
                 if(isWhite) {
                     image = new ImageView("images/wking.png");
                 } else {
                     image = new ImageView("images/bking.png");
                 }
                 break;
-            case "Q":
+            case "D":
                 if(isWhite) {
                     image = new ImageView("images/wqueen.png");
                 } else {
                     image = new ImageView("images/bqueen.png");
                 }
                 break;
-            case "B":
+            case "S":
                 if(isWhite) {
                     image = new ImageView("images/wbishop.png");
                 } else {
                     image = new ImageView("images/bbishop.png");
                 }
                 break;
-            case "R":
+            case "V":
                 if(isWhite) {
                     image = new ImageView("images/wrook.png");
                 } else {
                     image = new ImageView("images/brook.png");
                 }
                 break;
-            case "K":
+            case "J":
                 if(isWhite) {
                     image = new ImageView("images/wknight.png");
                 } else {
@@ -58,6 +61,11 @@ public abstract class AbstractFigure implements Figure{
             default:
                 break;
         }
+    }
+
+    @Override
+    public String getFigureChar() {
+        return figureChar;
     }
 
     public boolean isWhite() {

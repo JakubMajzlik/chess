@@ -12,6 +12,7 @@ public interface Figure {
 
     Field getField();
     String getState();
+    String getFigureChar();
 
     ImageView getImage();
 }

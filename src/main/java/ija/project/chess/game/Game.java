@@ -54,7 +54,9 @@ public class Game {
         for(int row = 0; row < board.getSize(); row++) {
             for (int col = 0; col < board.getSize(); col++) {
                 gameBoard.add(board.getField(col , row).getBackground(), col, row);
-
+                // TODO: vymazat podmienku
+                if(board.getField(col, row).getFigure() != null)
+                gameBoard.add(board.getField(col, row).getFigure().getImage(), col, row);
             }
         }
 

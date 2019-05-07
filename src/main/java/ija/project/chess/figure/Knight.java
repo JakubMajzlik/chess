@@ -4,12 +4,11 @@ import ija.project.chess.field.Field;
 
 public class Knight extends AbstractFigure {
 	public Knight() {
-        super.figureChar = "K";
+        super("J", true);
     }
 
     public Knight(boolean white) {
-        super.figureChar = "K";
-        super.isWhite = white;
+        super("J", white);
     }
 
     public boolean move(Field moveTo) {
