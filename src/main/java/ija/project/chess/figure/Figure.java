@@ -5,6 +5,7 @@ import javafx.scene.image.ImageView;
 
 public interface Figure {
     boolean move(Field moveTo);
+    boolean canMove(Field moveTo);
     boolean isWhite();
 
     void setWhite(boolean isWhite);

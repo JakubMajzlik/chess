@@ -2,6 +2,7 @@ package ija.project.chess.figure;
 
 import ija.project.chess.board.Board;
 import ija.project.chess.field.Field;
+import ija.project.chess.game.Game;
 import javafx.scene.image.ImageView;
 
 public abstract class AbstractFigure implements Figure{
@@ -61,6 +62,32 @@ public abstract class AbstractFigure implements Figure{
             default:
                 break;
         }
+
+        handleEvents();
+
+    }
+
+    private void handleEvents() {
+        image.setOnMouseClicked(e ->{
+            Game game = this.field.getBoard().getGame();
+            Figure activeFigure = game.getActiveFigure();
+            if(game.isWhiteTurn() == this.isWhite()) {
+                if(activeFigure == null) {
+                    game.setActiveFigure(this);
+                } else if(activeFigure.isWhite() == this.isWhite()) {
+                    game.setActiveFigure(this);
+                }
+                System.out.println("Clicked on: " + this.getState());
+            } else {
+                if(game.getActiveFigure() != null) {
+                    if(game.getActiveFigure().canMove(this.field)) {
+                        game.getActiveFigure().move(this.field);
+                        game.setActiveFigure(null);
+                        game.setWhiteTurn(!game.isWhiteTurn());
+                    }
+                }
+            }
+        });
     }
 
     @Override

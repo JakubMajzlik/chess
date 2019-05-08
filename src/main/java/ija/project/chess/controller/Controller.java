@@ -26,8 +26,9 @@ public class Controller implements Initializable {
 
     @FXML
     public void newGame(ActionEvent event) {
-
-        Game game = GameFactory.createChessGame(new Board(8));
+        Board board = new Board(8);
+        Game game = GameFactory.createChessGame(board);
+        board.setGame(game);
 
         Tab tab = new Tab();
         tab.setText("Game #" + (tabPane.getTabs().size() + 1));
@@ -49,7 +50,9 @@ public class Controller implements Initializable {
 
         if(notationFile == null) return;
 
-        Game game = GameFactory.createChessGame(new Board(8));
+        Board board = new Board(8);
+        Game game = GameFactory.createChessGame(board);
+        board.setGame(game);
 
         //TODO: namapovat na hru
 

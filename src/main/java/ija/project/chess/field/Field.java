@@ -2,7 +2,9 @@ package ija.project.chess.field;
 
 import ija.project.chess.board.Board;
 import ija.project.chess.figure.Figure;
+import ija.project.chess.game.Game;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
 
 public class Field {
 
@@ -85,6 +87,11 @@ public class Field {
             }
             this.figure = figure;
             figure.setField(this);
+            if(board.getGame() != null) {
+                GridPane gridPane = (GridPane)board.getGame().getContent().getCenter();
+                gridPane.add(figure.getImage(), this.col,this.row);
+            }
+
             return true;
         }
         return false;
@@ -93,6 +100,8 @@ public class Field {
     public boolean remove(Figure figure) {
         if(this.figure.equals(figure)) {
             if(!isEmpty()) {
+                GridPane gridPane = (GridPane)board.getGame().getContent().getCenter();
+                gridPane.getChildren().remove(figure.getImage());
                 figure.setField(null);
                 this.figure = null;
                 return true;
@@ -127,6 +136,23 @@ public class Field {
                 break;
         }
         return null;
+    }
+
+    public void handleEvents() {
+        background.setOnMouseClicked(e -> {
+            Game game = this.board.getGame();
+            if(this.figure == null && game.getActiveFigure() != null) {
+                if(game.getActiveFigure().canMove(this)) {
+                    game.getActiveFigure().move(this);
+                    game.setActiveFigure(null);
+                    game.setWhiteTurn(!game.isWhiteTurn());
+                }
+            } else if(this.figure != null && game.getActiveFigure() == null) {
+                if(game.isWhiteTurn() == this.getFigure().isWhite()) {
+                    game.setActiveFigure(this.getFigure());
+                }
+            }
+        });
     }
 
     public int getCol() {

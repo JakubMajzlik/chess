@@ -23,6 +23,10 @@ public class Game {
 
     private BorderPane content = new BorderPane();
 
+    private Figure activeFigure = null;
+
+    private boolean whiteTurn = true;
+
     public Game(Board board) {
         this.board = board;
         initializeGameBoardUI();
@@ -57,6 +61,7 @@ public class Game {
                 // TODO: vymazat podmienku
                 if(board.getField(col, row).getFigure() != null)
                 gameBoard.add(board.getField(col, row).getFigure().getImage(), col, row);
+
             }
         }
 
@@ -85,7 +90,23 @@ public class Game {
         return false;
     }
 
-    public Node getContent() {
+    public BorderPane getContent() {
         return content;
+    }
+
+    public Figure getActiveFigure() {
+        return activeFigure;
+    }
+
+    public void setActiveFigure(Figure activeFigure) {
+        this.activeFigure = activeFigure;
+    }
+
+    public boolean isWhiteTurn() {
+        return whiteTurn;
+    }
+
+    public void setWhiteTurn(boolean whiteTurn) {
+        this.whiteTurn = whiteTurn;
     }
 }

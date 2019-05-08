@@ -2,6 +2,7 @@ package ija.project.chess.board;
 
 import ija.project.chess.field.Field;
 import ija.project.chess.figure.Figure;
+import ija.project.chess.game.Game;
 import javafx.scene.image.ImageView;
 
 public class Board {
@@ -11,6 +12,8 @@ public class Board {
     Field[][] field;
 
     Field startField;
+
+    private Game game;
 
     public Board(int size) {
         field = new Field[size][size];
@@ -34,6 +37,7 @@ public class Board {
                 }
 
                 field[col][row] = boardField;
+                boardField.handleEvents();
             }
         }
 
@@ -90,5 +94,13 @@ public class Board {
         }
 
         return figure;
+    }
+
+    public Game getGame() {
+        return game;
+    }
+
+    public void setGame(Game game) {
+        this.game = game;
     }
 }
