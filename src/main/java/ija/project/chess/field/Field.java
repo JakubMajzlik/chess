@@ -143,7 +143,7 @@ public class Field {
             Game game = this.board.getGame();
             if(this.figure == null && game.getActiveFigure() != null) {
                 if(game.getActiveFigure().canMove(this)) {
-                    game.getActiveFigure().move(this);
+                    game.move(game.getActiveFigure(), this);
                     game.setActiveFigure(null);
                     game.setWhiteTurn(!game.isWhiteTurn());
                 }

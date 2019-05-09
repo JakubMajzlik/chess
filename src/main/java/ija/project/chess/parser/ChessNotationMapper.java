@@ -17,6 +17,8 @@ public class ChessNotationMapper {
     public Turn getTurn(ChessTurnNotation notation) throws ChessNotationMapperException {
         Turn turn = new Turn();
 
+        turn.setTurnOrder(notation.getTurnOrder());
+
         setTurnAttributes(notation, turn, true);
 
         setTurnAttributes(notation, turn, false);
@@ -84,6 +86,10 @@ public class ChessNotationMapper {
         } else if(turn.isWhiteCheckMate()) {
             blackNotation.append("#");
         }
+
+        notation.setTurnOrder(turn.getTurnOrder());
+        notation.setWhiteTurnNotation(whiteNotation.toString());
+        notation.setBlackTurnNotation(blackNotation.toString());
 
         return notation;
     }

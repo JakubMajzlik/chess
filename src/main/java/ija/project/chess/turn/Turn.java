@@ -26,6 +26,16 @@ public class Turn {
     private Field blackDestinationField;
     private Field blackSourceField;
 
+    private int turnOrder;
+
+    public int getTurnOrder() {
+        return turnOrder;
+    }
+
+    public void setTurnOrder(int turnOrder) {
+        this.turnOrder = turnOrder;
+    }
+
     public Figure getWhitePawnUpgradesTo() {
         return whitePawnUpgradesTo;
     }

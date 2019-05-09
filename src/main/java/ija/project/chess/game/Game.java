@@ -3,6 +3,8 @@ package ija.project.chess.game;
 import ija.project.chess.board.Board;
 import ija.project.chess.field.Field;
 import ija.project.chess.figure.Figure;
+import ija.project.chess.notation.ChessTurnNotation;
+import ija.project.chess.parser.ChessNotationMapper;
 import ija.project.chess.turn.Turn;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -20,6 +22,10 @@ public class Game {
     private Board board;
 
     private List<Turn> history = new LinkedList<Turn>();
+
+    private int historyIndex = 0;
+
+    private Turn turn;
 
     private BorderPane content = new BorderPane();
 
@@ -85,8 +91,42 @@ public class Game {
 
     public boolean move(Figure figure, Field field) {
 
-        //TODO
+        if(figure.canMove(field)) {
+            Field sourceField = figure.getField();
+            if(figure.move(field)) {
+                if(figure.isWhite()) {
+                    turn = new Turn();
+                    turn.setTurnOrder(historyIndex + 1);
+                    turn.setWhiteFigure(figure);
+                    turn.setWhiteSourceField(sourceField);
+                    turn.setWhiteDestinationField(field);
+                    //TODO: dalsie casti notacie
 
+                    if(historyIndex < history.size() - 1) {
+                        for (int i = historyIndex; i < history.size(); i++) {
+                            history.remove(i);
+                        }
+                    }
+                    history.add(historyIndex++, turn);
+                } else {
+                    turn.setBlackFigure(figure);
+                    turn.setBlackSourceField(sourceField);
+                    turn.setBlackDestinationField(field);
+                    //TODO: dalsie casti notacie
+
+                    if(historyIndex  < history.size()) {
+                        for(int i = historyIndex; i < history.size(); i++) {
+                            history.remove(i);
+                        }
+                    }
+
+                    ChessNotationMapper mapper = new ChessNotationMapper(this);
+                    ChessTurnNotation notation = mapper.getNotation(turn);
+                    System.out.println(notation.getTurnOrder() + " " + notation.getWhiteTurnNotation() + " " + notation.getBlackTurnNotation());
+                }
+
+            }
+        }
         return false;
     }
 

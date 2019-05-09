@@ -81,7 +81,7 @@ public abstract class AbstractFigure implements Figure{
             } else {
                 if(game.getActiveFigure() != null) {
                     if(game.getActiveFigure().canMove(this.field)) {
-                        game.getActiveFigure().move(this.field);
+                        game.move(game.getActiveFigure(), this.field);
                         game.setActiveFigure(null);
                         game.setWhiteTurn(!game.isWhiteTurn());
                     }
