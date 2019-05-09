@@ -2,6 +2,8 @@ package ija.project.chess.factory;
 
 import ija.project.chess.board.Board;
 import ija.project.chess.figure.Knight;
+import ija.project.chess.figure.Pawn;
+import ija.project.chess.figure.Rook;
 import ija.project.chess.game.Game;
 
 public abstract class GameFactory {
@@ -15,8 +17,8 @@ public abstract class GameFactory {
         // White
 
         // Towers
-        //board.getField(0,0).put(new Tower(true));
-        //board.getField(7,0).put(new Tower(true));
+        board.getField(0,0).put(new Rook(true));
+        board.getField(7,0).put(new Rook(true));
 
         //
         //board.getField(2,0).put(new Archer(true));
@@ -35,14 +37,14 @@ public abstract class GameFactory {
 
         // Pawns
         for (int col = 0; col < 8; col++) {
-            //board.getField(col,1).put(new Pawn(true));
+            board.getField(col,1).put(new Pawn(true));
         }
 
         //Black
 
         // Towers
-        //board.getField(0,7).put(new Tower(false));
-        //board.getField(7,7).put(new Tower(false));
+        board.getField(0,7).put(new Rook(false));
+        board.getField(7,7).put(new Rook(false));
 
         //
         //board.getField(2,7).put(new Archer(false));
@@ -60,7 +62,7 @@ public abstract class GameFactory {
 
         // Pawns
         for (int col = 0; col < 8; col++) {
-            //board.getField(col,7).put(new Pawn(false));
+            board.getField(col,6).put(new Pawn(false));
         }
 
         return new Game(board);
