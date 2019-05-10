@@ -27,7 +27,6 @@ public class ChessNotationMapper {
         return turn;
     }
 
-    // TODO: Kontrola, ci sa v notacii nachadza aj tah cierneho
     public ChessTurnNotation getNotation(Turn turn) {
         ChessTurnNotation notation = new ChessTurnNotation();
         StringBuilder whiteNotation = new StringBuilder();
@@ -47,9 +46,9 @@ public class ChessNotationMapper {
         } else if(turn.isSpecifyRowForWhite()) {
             whiteNotation.append(turn.getWhiteSourceField().getRow());
         }
-        if(turn.isSpecifyColumnForBlack()) {
+        if(turn.getBlackFigure() != null && turn.isSpecifyColumnForBlack()) {
             blackNotation.append((char)(turn.getBlackSourceField().getCol() + 'a'));
-        } else if(turn.isSpecifyRowForBlack()) {
+        } else if(turn.getBlackFigure() != null && turn.isSpecifyRowForBlack()) {
             whiteNotation.append(turn.getBlackSourceField().getRow());
         }
 
@@ -357,11 +356,9 @@ public class ChessNotationMapper {
     private void setSourceAndDestination(Turn turn, boolean isWhite, char column, char row) {
         if (isWhite) {
             turn.setWhiteSourceField(turn.getWhiteFigure().getField());
-            // TODO: skontrolovat
             turn.setWhiteDestinationField(game.getBoard().getField(column - 'a', row - '1'));
         } else {
             turn.setBlackSourceField(turn.getBlackFigure().getField());
-            // TODO: skontrolovat
             turn.setBlackDestinationField(game.getBoard().getField(column - 'a', row - '1'));
         }
     }

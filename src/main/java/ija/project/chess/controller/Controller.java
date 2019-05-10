@@ -61,7 +61,6 @@ public class Controller implements Initializable {
         Game game = GameFactory.createChessGame(board);
         board.setGame(game);
 
-        //TODO: Vypis chyby pri parsovani...
         ChessNotationReader reader = null;
         ChessNotationMapper mapper = new ChessNotationMapper(game);
         ChessTurnNotation turnNotation;
