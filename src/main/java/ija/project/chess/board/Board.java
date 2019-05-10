@@ -73,7 +73,7 @@ public class Board {
         return size;
     }
 
-    public Figure findFigure(String figureType, Integer column, Integer row, boolean isWhite) {
+    public Figure findFigure(String figureType, Integer column, Integer row, Field canMoveTo, boolean isWhite) {
         Figure figure = null;
 
         for (int i = 0; i < field.length; i++) {
@@ -83,10 +83,18 @@ public class Board {
                 if(foundedFigure != null && foundedFigure.isWhite() == isWhite
                     && foundedFigure.getFigureChar().equals(figureType)) {
 
-                    if(column != null && column.intValue() == figure.getField().getCol()) {
+
+
+                    if(column != null && column.intValue() == foundedFigure.getField().getCol()) {
                         figure = foundedFigure;
-                    } else if(row != null && row.intValue() == figure.getField().getRow()) {
+                    } else if(row != null && row.intValue() == foundedFigure.getField().getRow()) {
                         figure = foundedFigure;
+                    } else if(column == null && row == null) {
+                        if(canMoveTo == null) {
+                            figure = foundedFigure;
+                        } else if(foundedFigure.canMove(canMoveTo)) {
+                            figure = foundedFigure;
+                        }
                     }
 
                 }

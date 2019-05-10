@@ -90,7 +90,7 @@ public class Field {
             figure.setField(this);
             if(board.getGame() != null) {
                 GridPane gridPane = (GridPane)board.getGame().getContent().getCenter();
-                gridPane.add(figure.getImage(), this.col,this.row);
+                gridPane.add(figure.getImage(), this.col + 1,this.row);
             }
 
             return true;

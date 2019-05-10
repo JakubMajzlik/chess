@@ -28,6 +28,31 @@ public class Turn {
 
     private int turnOrder;
 
+    @Override
+    public String toString() {
+        return "Turn{" +
+                "whiteFigure=" + whiteFigure +
+                ", whitePawnUpgradesTo=" + whitePawnUpgradesTo +
+                ", specifyColumnForWhite=" + specifyColumnForWhite +
+                ", specifyRowForWhite=" + specifyRowForWhite +
+                ", whiteDefends=" + whiteDefends +
+                ", whiteCheckMate=" + whiteCheckMate +
+                ", whiteCheck=" + whiteCheck +
+                ", whiteDestinationField=" + whiteDestinationField +
+                ", whiteSourceField=" + whiteSourceField +
+                ", blackFigure=" + blackFigure +
+                ", blackPawnUpgradesTo=" + blackPawnUpgradesTo +
+                ", specifyColumnForBlack=" + specifyColumnForBlack +
+                ", specifyRowForBlack=" + specifyRowForBlack +
+                ", blackDefends=" + blackDefends +
+                ", blackCheckMate=" + blackCheckMate +
+                ", blackCheck=" + blackCheck +
+                ", blackDestinationField=" + blackDestinationField +
+                ", blackSourceField=" + blackSourceField +
+                ", turnOrder=" + turnOrder +
+                '}';
+    }
+
     public int getTurnOrder() {
         return turnOrder;
     }

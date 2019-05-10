@@ -14,6 +14,10 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -29,6 +33,7 @@ public class Game {
     private Turn turn;
 
     private BorderPane content = new BorderPane();
+    private VBox notationsBox;
 
     private Figure activeFigure = null;
 
@@ -71,15 +76,35 @@ public class Game {
 
         content.setTop(topPanel);
 
+        // NOTATIONS
+        notationsBox = new VBox();
+
+        content.setLeft(notationsBox);
+
         // GAME BOARD
         GridPane gameBoard = new GridPane();
 
-        for(int row = 0; row < board.getSize(); row++) {
-            for (int col = 0; col < board.getSize(); col++) {
-                gameBoard.add(board.getField(col , row).getBackground(), col, row);
-                // TODO: vymazat podmienku
-                if(board.getField(col, row).getFigure() != null)
-                gameBoard.add(board.getField(col, row).getFigure().getImage(), col, row);
+        gameBoard.setAlignment(Pos.CENTER);
+
+        for(int row = 0; row < board.getSize() + 1; row++) {
+            for (int col = 0; col < board.getSize() + 1; col++) {
+                if(col == 0 && row < board.getSize()) {
+                    Text text = new Text(""+ (row + 1));
+                    text.setFont(Font.font("Arial", 20));
+                    gameBoard.add(text, col, row);
+                } else if(col > 0 && row == board.getSize()) {
+                    //TODO: Vycentrovat
+                    Text text = new Text(""+ (char)(col - 1 + 'a'));
+                    text.setFont(Font.font("Arial", 20));
+                    text.setTextAlignment(TextAlignment.CENTER);
+                    gameBoard.add(text, col, row);
+                } else if(col > 0 && row < board.getSize()) {
+                    gameBoard.add(board.getField(col - 1 , row).getBackground(), col, row);
+                    // TODO: vymazat podmienku
+                    if(board.getField(col - 1, row).getFigure() != null)
+                        gameBoard.add(board.getField(col - 1, row).getFigure().getImage(), col, row);
+                }
+
 
             }
         }
@@ -117,6 +142,12 @@ public class Game {
                 board.getField(destinationField.getCol(), destinationField.getRow()).put(destinationField.get());
             }
 
+            // Vypis natacie vlavo
+            ChessNotationMapper mapper = new ChessNotationMapper(this);
+            ChessTurnNotation notation = mapper.getNotation(turn);
+            Text notationText = (Text) notationsBox.getChildren().get(notationsBox.getChildren().size() - 1);
+            notationText.setText(notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation());
+
         } else {
 
             turn = history.get(historyIndex);
@@ -131,14 +162,18 @@ public class Game {
                 board.getField(destinationField.getCol(), destinationField.getRow()).put(destinationField.get());
             }
 
+            notationsBox.getChildren().remove(notationsBox.getChildren().size() - 1);
+
         }
     }
 
     public void forward() {
         if(historyIndex < history.size()) {
             if(isWhiteTurn()) {
+                if(turn == null) {
+                    turn = history.get(historyIndex);
+                }
 
-                //turn = history.get(historyIndex);
                 setWhiteTurn(false);
 
 //                Figure figure = turn.getWhiteFigure();
@@ -147,6 +182,14 @@ public class Game {
                 Field destinationField = turn.getWhiteDestinationField();
 
                 figure.move(board.getField(destinationField.getCol(),destinationField.getRow()));
+
+                // Vypis natacie vlavo
+                ChessNotationMapper mapper = new ChessNotationMapper(this);
+                ChessTurnNotation notation = mapper.getNotation(turn);
+                Text notationText = new Text( notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation() + " ");
+                notationText.setFont(Font.font("Arial", 20));
+                notationsBox.getChildren().add(notationText);
+
             } else if(turn.getBlackFigure() != null) {
                 setWhiteTurn(true);
 
@@ -156,6 +199,12 @@ public class Game {
                 Field destinationField = turn.getBlackDestinationField();
 
                 figure.move(board.getField(destinationField.getCol(),destinationField.getRow()));
+
+                // Vypis natacie vlavo
+                ChessNotationMapper mapper = new ChessNotationMapper(this);
+                ChessTurnNotation notation = mapper.getNotation(turn);
+                Text notationText = (Text) notationsBox.getChildren().get(notationsBox.getChildren().size() - 1);
+                notationText.setText(notationText.getText() + notation.getBlackTurnNotation());
 
                 historyIndex++;
                 if(historyIndex < history.size()) {
@@ -193,6 +242,14 @@ public class Game {
                     }
 
                     history.add(historyIndex, turn);
+
+                    // Vypis natacie vlavo
+                    ChessNotationMapper mapper = new ChessNotationMapper(this);
+                    ChessTurnNotation notation = mapper.getNotation(turn);
+                    Text notationText = new Text( notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation() + " ");
+                    notationText.setFont(Font.font("Arial", 20));
+                    notationsBox.getChildren().add(notationText);
+
                     return true;
                 } else {
                     turn.setBlackFigure(figure);
@@ -206,6 +263,12 @@ public class Game {
                     }
 
                     historyIndex++;
+
+                    // Vypis natacie vlavo
+                    ChessNotationMapper mapper = new ChessNotationMapper(this);
+                    ChessTurnNotation notation = mapper.getNotation(turn);
+                    Text notationText = (Text) notationsBox.getChildren().get(notationsBox.getChildren().size() - 1);
+                    notationText.setText(notationText.getText() + notation.getBlackTurnNotation());
 
                     return true;
                 }
@@ -233,5 +296,13 @@ public class Game {
 
     public void setWhiteTurn(boolean whiteTurn) {
         this.whiteTurn = whiteTurn;
+    }
+
+    public List<Turn> getHistory() {
+        return history;
+    }
+
+    public void setHistory(List<Turn> history) {
+        this.history = history;
     }
 }
