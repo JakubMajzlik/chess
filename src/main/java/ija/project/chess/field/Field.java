@@ -83,7 +83,8 @@ public class Field {
         if(isEmpty()) {
             if(figure.getField() != null) {
                 Field figureField = figure.getField();
-                board.getField(figureField.getCol(), figureField.getRow()).remove(figure);
+                figureField.remove(figure);
+                //board.getField(figureField.getCol(), figureField.getRow()).remove(figure);
             }
             this.figure = figure;
             figure.setField(this);

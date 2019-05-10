@@ -54,6 +54,12 @@ public class Game {
             }
         });
 
+        forward.setOnMouseClicked(e -> {
+            if(historyIndex < history.size()) {
+                forward();
+            }
+        });
+
         stop.setVisible(false);
 
         topPanel.getChildren().add(backward);
@@ -93,7 +99,6 @@ public class Game {
     }
 
     public void backward() {
-        //TODO
         if(isWhiteTurn()) {
             historyIndex--;
             turn = history.get(historyIndex);
@@ -102,10 +107,10 @@ public class Game {
             Figure figure = turn.getBlackFigure();
             Field sourceField = turn.getBlackSourceField();
             Field destinationField = turn.getBlackDestinationField();
-
-            ChessNotationMapper mapper = new ChessNotationMapper(this);
-            ChessTurnNotation notation = mapper.getNotation(turn);
-            System.out.println(notation.getTurnOrder() + " " + notation.getWhiteTurnNotation() + " " + notation.getBlackTurnNotation());
+//
+//            ChessNotationMapper mapper = new ChessNotationMapper(this);
+//            ChessTurnNotation notation = mapper.getNotation(turn);
+//            System.out.println(notation.getTurnOrder() + " " + notation.getWhiteTurnNotation() + " " + notation.getBlackTurnNotation());
 
             board.getField(sourceField.getCol(), sourceField.getRow()).put(figure);
             if(destinationField.get() != null) {
@@ -129,10 +134,38 @@ public class Game {
         }
     }
 
-    public void foreward() {
-        //TODO
+    public void forward() {
+        if(historyIndex < history.size()) {
+            if(isWhiteTurn()) {
+
+                //turn = history.get(historyIndex);
+                setWhiteTurn(false);
+
+//                Figure figure = turn.getWhiteFigure();
+                Figure figure = board.getField(turn.getWhiteFigure().getField().getCol(), turn.getWhiteFigure().getField().getRow()).get();
+                Field sourceField = turn.getWhiteSourceField();
+                Field destinationField = turn.getWhiteDestinationField();
+
+                figure.move(board.getField(destinationField.getCol(),destinationField.getRow()));
+            } else if(turn.getBlackFigure() != null) {
+                setWhiteTurn(true);
+
+                Figure figure = board.getField(turn.getBlackFigure().getField().getCol(), turn.getBlackFigure().getField().getRow()).get();
+//                Figure figure = turn.getBlackFigure();
+                Field sourceField = turn.getBlackSourceField();
+                Field destinationField = turn.getBlackDestinationField();
+
+                figure.move(board.getField(destinationField.getCol(),destinationField.getRow()));
+
+                historyIndex++;
+                if(historyIndex < history.size()) {
+                    turn = history.get(historyIndex);
+                }
+            }
+        }
     }
 
+    //TODO: zmena tahu po pretoceni hapruje
     public boolean move(Figure figure, Field field) {
 
         if(figure.canMove(field)) {
