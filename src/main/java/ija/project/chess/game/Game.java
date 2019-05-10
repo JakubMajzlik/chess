@@ -278,6 +278,95 @@ public class Game {
         return false;
     }
 
+    // TODO: otestovat
+    //TODO: pridat tuto kontrolo pu tahu
+    public boolean isCheck(Field checkField, Figure king) {
+        return isCheck(checkField, king, new ArrayList<Figure>());
+    }
+
+    public boolean isCheck(Field checkField, Figure king, List<Figure> excludeList) {
+        boolean isKingWhite = !king.isWhite();
+        List<Figure> enemyFigureList = getAllFigures(!isKingWhite);
+        enemyFigureList.removeAll(excludeList);
+
+        for(Figure figure : enemyFigureList) {
+            if(figure.canMove(checkField)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    //TODO: otestovat
+    //TODO: pridat tuto kontrolo pu tahu
+    public boolean isCheckMate(Figure king) {
+        Field checkField = king.getField();
+
+        if(!isCheck(checkField, king)) return false;
+
+        boolean isKingWhite = !king.isWhite();
+        boolean canMove = true;
+        List<Figure> enemyFigureList = getAllFigures(!isKingWhite);
+        List<Figure> allyFigureList = getAllFigures(isKingWhite);
+        List<Field> kingsPossibleMovement = new ArrayList<>();
+
+        kingsPossibleMovement.add(checkField.nextField(Field.Direction.L));
+        kingsPossibleMovement.add(checkField.nextField(Field.Direction.LU));
+        kingsPossibleMovement.add(checkField.nextField(Field.Direction.U));
+        kingsPossibleMovement.add(checkField.nextField(Field.Direction.RU));
+        kingsPossibleMovement.add(checkField.nextField(Field.Direction.R));
+        kingsPossibleMovement.add(checkField.nextField(Field.Direction.RD));
+        kingsPossibleMovement.add(checkField.nextField(Field.Direction.D));
+        kingsPossibleMovement.add(checkField.nextField(Field.Direction.LD));
+
+        for(Field field : kingsPossibleMovement) {
+            if(field == null) continue;
+
+            if(!isCheck(checkField, king)) return false;
+        }
+
+        for(Figure enemyFigure : enemyFigureList) {
+            if(enemyFigure.canMove(checkField)) {
+                for(Figure allyFigure : allyFigureList) {
+                    if(allyFigure.canMove(enemyFigure.getField())) {
+                        List<Figure> excludedFigure  = new ArrayList<>();
+                        excludedFigure.add(enemyFigure);
+                        if(!isCheck(checkField, king, excludedFigure)) return false;
+                    }
+                }
+
+                for(Figure allyFigure : allyFigureList) {
+                    for(Field enemySurrounding : enemyFigure.getField().getSurrouding()) {
+                        if(allyFigure.canMove(enemySurrounding)) {
+                            List<Figure> excludedFigure  = new ArrayList<>();
+                            excludedFigure.add(enemyFigure);
+                            if(!isCheck(checkField, king, excludedFigure)) return false;
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+
+        return true;
+    }
+
+    private List<Figure> getAllFigures(boolean isWhite) {
+        List<Figure> figureList = new ArrayList<>();
+
+        for(int i = 0; i < board.getSize(); i++) {
+            for(int j = 0; j < board.getSize(); j++) {
+                Figure figure = board.getField(i, j).get();
+                if(figure.isWhite() == isWhite) {
+                    figureList.add(figure);
+                }
+            }
+        }
+        return figureList;
+    }
+
     public BorderPane getContent() {
         return content;
     }
