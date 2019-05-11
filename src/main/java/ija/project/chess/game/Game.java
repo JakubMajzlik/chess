@@ -6,6 +6,8 @@ import ija.project.chess.figure.Figure;
 import ija.project.chess.notation.ChessTurnNotation;
 import ija.project.chess.parser.ChessNotationMapper;
 import ija.project.chess.turn.Turn;
+import javafx.animation.PauseTransition;
+import javafx.application.Platform;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
@@ -18,10 +20,9 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
+import javafx.util.Duration;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class Game {
     private Board board;
@@ -44,6 +45,9 @@ public class Game {
 
     private boolean whiteTurn = true;
 
+    private boolean autoPlay;
+    private Timer timer;
+
     ImageView rookImage;
     ImageView bishopImage;
     ImageView queenImage;
@@ -54,6 +58,7 @@ public class Game {
         initializeGameBoardUI();
     }
 
+
     private void initializeGameBoardUI() {
         // TOP PANEL
         HBox topPanel = new HBox();
@@ -62,6 +67,9 @@ public class Game {
         Button play = new Button("Play");
         Button stop = new Button("Stop");
         Button forward = new Button("Forward");
+
+
+
 
         backward.setOnMouseClicked(e -> {
             if(historyIndex > 0 || !isWhiteTurn()){
@@ -73,6 +81,43 @@ public class Game {
             if(historyIndex < history.size()) {
                 forward();
             }
+        });
+
+        play.setOnMouseClicked(e -> {
+            stop.setVisible(true);
+            play.setVisible(false);
+            autoPlay = true;
+
+            timer =  new Timer();
+
+                   timer.schedule(
+                            new TimerTask() {
+
+                                @Override
+                                public void run() {
+                                    Platform.runLater(() -> {
+                                        if(autoPlay) {
+                                            if (historyIndex < history.size()) {
+                                                forward();
+                                            } else {
+                                                autoPlay = false;
+                                                play.setVisible(true);
+                                                stop.setVisible(false);
+                                                timer.cancel();
+                                                timer.purge();
+                                            }
+                                        }
+                                    });
+                                }
+                            }, 0, 500);
+        });
+
+        stop.setOnMouseClicked(e -> {
+            play.setVisible(true);
+            stop.setVisible(false);
+            timer.cancel();
+            timer.purge();
+            autoPlay = false;
         });
 
         stop.setVisible(false);
