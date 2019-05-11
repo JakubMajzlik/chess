@@ -4,6 +4,7 @@ import ija.project.chess.board.Board;
 import ija.project.chess.field.Field;
 import ija.project.chess.game.Game;
 import javafx.scene.image.ImageView;
+import javafx.scene.text.Text;
 
 public abstract class AbstractFigure implements Figure{
 
@@ -141,5 +142,13 @@ public abstract class AbstractFigure implements Figure{
     @Override
     public ImageView getImage() {
         return image;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        Figure figure = (Figure)obj;
+        if(figure.getState().equals(getState()))
+            return true;
+        return false;
     }
 }

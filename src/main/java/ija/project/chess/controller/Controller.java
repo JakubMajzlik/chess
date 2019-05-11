@@ -4,6 +4,7 @@ import ija.project.chess.board.Board;
 import ija.project.chess.exceptions.ChessNotationMapperException;
 import ija.project.chess.exceptions.WrongChessNotationFileException;
 import ija.project.chess.factory.GameFactory;
+import ija.project.chess.figure.Figure;
 import ija.project.chess.game.Game;
 import ija.project.chess.notation.ChessTurnNotation;
 import ija.project.chess.parser.ChessNotationMapper;
@@ -72,7 +73,14 @@ public class Controller implements Initializable {
                 history.add(turn);
             }
             game.setHistory(history);
+            mapper.recoverBoard();
 
+            for (int i = 0; i < 8; i++) {
+                for (int j = 0; j < 8; j++) {
+                    Figure foundedFigure = board.getField(i, j).get();
+                    if(foundedFigure != null && foundedFigure.getField() == null) System.out.println(foundedFigure.getFigureChar() + " is null");
+                }
+            }
 
             Tab tab = new Tab();
             tab.setText("Game #" + (tabPane.getTabs().size() + 1));

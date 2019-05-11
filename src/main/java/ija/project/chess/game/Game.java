@@ -32,12 +32,22 @@ public class Game {
 
     private Turn turn;
 
+    private List<Figure> capturedFigures = new ArrayList<>();
+
     private BorderPane content = new BorderPane();
     private VBox notationsBox;
+    private VBox figuresForChange;
+    private Text checkOrCheckMateText = new Text("Check");
 
     private Figure activeFigure = null;
+    private Figure pawnFigureToChange;
 
     private boolean whiteTurn = true;
+
+    ImageView rookImage;
+    ImageView bishopImage;
+    ImageView queenImage;
+    ImageView knightImage;
 
     public Game(Board board) {
         this.board = board;
@@ -81,6 +91,29 @@ public class Game {
 
         content.setLeft(notationsBox);
 
+        // Right box
+        VBox rightBox = new VBox();
+
+        checkOrCheckMateText.setFont(Font.font("Arial", 25));
+        checkOrCheckMateText.setVisible(false);
+
+        figuresForChange = new VBox();
+
+        rookImage = new ImageView();
+        bishopImage = new ImageView();
+        knightImage = new ImageView();
+        queenImage = new ImageView();
+        figuresForChange.getChildren().add(rookImage);
+        figuresForChange.getChildren().add(bishopImage);
+        figuresForChange.getChildren().add(knightImage);
+        figuresForChange.getChildren().add(queenImage);
+
+        hideFiguresForChange();
+
+        rightBox.getChildren().add(checkOrCheckMateText);
+        rightBox.getChildren().add(figuresForChange);
+        content.setRight(rightBox);
+
         // GAME BOARD
         GridPane gameBoard = new GridPane();
 
@@ -100,9 +133,8 @@ public class Game {
                     gameBoard.add(text, col, row);
                 } else if(col > 0 && row < board.getSize()) {
                     gameBoard.add(board.getField(col - 1 , row).getBackground(), col, row);
-                    // TODO: vymazat podmienku
                     if(board.getField(col - 1, row).getFigure() != null)
-                        gameBoard.add(board.getField(col - 1, row).getFigure().getImage(), col, row);
+                    gameBoard.add(board.getField(col - 1, row).getFigure().getImage(), col, row);
                 }
 
 
@@ -123,6 +155,58 @@ public class Game {
         this.board = board;
     }
 
+    public void showFiguresForChange(boolean isWhile) {
+        String prefix = isWhile ? "w" : "b";
+
+        rookImage.setImage(new Image("images/" + prefix + "rook.png"));
+        bishopImage.setImage(new Image("images/" + prefix + "bishop.png"));
+        knightImage.setImage(new Image("images/" + prefix + "knight.png"));
+        queenImage.setImage(new Image("images/" + prefix + "queen.png"));
+
+        figuresForChange.setVisible(true);
+    }
+
+    public void hideFiguresForChange() {figuresForChange.setVisible(false);}
+
+    public void handleiguresForChangeEvents() {
+        rookImage.setOnMouseClicked(e -> {
+            if(pawnFigureToChange != null) {
+                if(!areAllFiguresOfTypeAlive("V", pawnFigureToChange.isWhite())) {
+                    Figure figure = getCapturedFigure("V", pawnFigureToChange.isWhite());
+                    if(figure != null) {
+                        pawnFigureToChange.getField().put(figure);
+                        capturedFigures.add(pawnFigureToChange);
+                        pawnFigureToChange = null;
+                    }
+                }
+            }
+        });
+
+        bishopImage.setOnMouseClicked(e -> {
+
+        });
+
+        knightImage.setOnMouseClicked(e -> {
+
+        });
+
+        queenImage.setOnMouseClicked(e -> {
+
+        });
+    }
+
+    private Figure getCapturedFigure(String figureType, boolean isWhite) {
+        for (Figure figure : capturedFigures) {
+            if(figure.isWhite() == isWhite) {
+                if(figure.getFigureChar() == figureType) {
+                    capturedFigures.remove(figure);
+                    return figure;
+                }
+            }
+        }
+        return null;
+    }
+
     public void backward() {
         if(isWhiteTurn()) {
             historyIndex--;
@@ -132,18 +216,19 @@ public class Game {
             Figure figure = turn.getBlackFigure();
             Field sourceField = turn.getBlackSourceField();
             Field destinationField = turn.getBlackDestinationField();
-//
-//            ChessNotationMapper mapper = new ChessNotationMapper(this);
-//            ChessTurnNotation notation = mapper.getNotation(turn);
-//            System.out.println(notation.getTurnOrder() + " " + notation.getWhiteTurnNotation() + " " + notation.getBlackTurnNotation());
 
+            figure.setField(board.getField(sourceField.getCol(), sourceField.getRow()));
             board.getField(sourceField.getCol(), sourceField.getRow()).put(figure);
             if(destinationField.get() != null) {
-                board.getField(destinationField.getCol(), destinationField.getRow()).put(destinationField.get());
+                board.getField(destinationField.getCol(), destinationField.getRow()).setFigure(destinationField.get());
+                ((GridPane)content.getCenter()).add(destinationField.get()
+                        .getImage(), destinationField.getCol() + 1, destinationField.getRow());
+//                board.getField(destinationField.getCol(), destinationField.getRow()).get()
+//                        .setField(board.getField(destinationField.getCol(), destinationField.getRow()));
             }
 
             // Vypis natacie vlavo
-            ChessNotationMapper mapper = new ChessNotationMapper(this);
+            ChessNotationMapper mapper = new ChessNotationMapper();
             ChessTurnNotation notation = mapper.getNotation(turn);
             Text notationText = (Text) notationsBox.getChildren().get(notationsBox.getChildren().size() - 1);
             notationText.setText(notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation());
@@ -157,9 +242,16 @@ public class Game {
             Field sourceField = turn.getWhiteSourceField();
             Field destinationField = turn.getWhiteDestinationField();
 
+            figure.setField(board.getField(sourceField.getCol(), sourceField.getRow()));
             board.getField(sourceField.getCol(), sourceField.getRow()).put(figure);
             if(destinationField.get() != null){
-                board.getField(destinationField.getCol(), destinationField.getRow()).put(destinationField.get());
+                board.getField(destinationField.getCol(), destinationField.getRow()).setFigure(destinationField.get());
+                ((GridPane)content.getCenter()).add(destinationField.get()
+                        .getImage(), destinationField.getCol() + 1, destinationField.getRow());
+
+//                board.getField(destinationField.getCol(), destinationField.getRow()).get()
+//                        .setField(board.getField(destinationField.getCol(), destinationField.getRow()));
+
             }
 
             notationsBox.getChildren().remove(notationsBox.getChildren().size() - 1);
@@ -176,15 +268,27 @@ public class Game {
 
                 setWhiteTurn(false);
 
-//                Figure figure = turn.getWhiteFigure();
-                Figure figure = board.getField(turn.getWhiteFigure().getField().getCol(), turn.getWhiteFigure().getField().getRow()).get();
+                Figure figure = turn.getWhiteFigure();
+                //Figure figure = board.getField(turn.getWhiteFigure().getField().getCol(), turn.getWhiteFigure().getField().getRow()).get();
                 Field sourceField = turn.getWhiteSourceField();
                 Field destinationField = turn.getWhiteDestinationField();
 
-                figure.move(board.getField(destinationField.getCol(),destinationField.getRow()));
+//                if(board.getField(destinationField.getCol(),destinationField.getRow()).get() != null) {
+//                    turn.getWhiteDestinationField().setFigure(board.getField(destinationField.getCol(),destinationField.getRow()).get());
+//                }
+
+                //figure.move(board.getField(destinationField.getCol(),destinationField.getRow()));
+                if( board.getField(destinationField.getCol(),destinationField.getRow()).get() != null) {
+
+                    ((GridPane)content.getCenter()).getChildren().
+                            remove(board.getField(destinationField.getCol(),destinationField.getRow()).get().getImage());
+                    board.getField(destinationField.getCol(),destinationField.getRow()).setFigure(null);
+                }
+                board.getField(destinationField.getCol(),destinationField.getRow()).put(figure);
+                board.getField(sourceField.getCol(),sourceField.getRow()).setFigure(null);
 
                 // Vypis natacie vlavo
-                ChessNotationMapper mapper = new ChessNotationMapper(this);
+                ChessNotationMapper mapper = new ChessNotationMapper();
                 ChessTurnNotation notation = mapper.getNotation(turn);
                 Text notationText = new Text( notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation() + " ");
                 notationText.setFont(Font.font("Arial", 20));
@@ -193,15 +297,27 @@ public class Game {
             } else if(turn.getBlackFigure() != null) {
                 setWhiteTurn(true);
 
-                Figure figure = board.getField(turn.getBlackFigure().getField().getCol(), turn.getBlackFigure().getField().getRow()).get();
-//                Figure figure = turn.getBlackFigure();
+               // Figure figure = board.getField(turn.getBlackFigure().getField().getCol(), turn.getBlackFigure().getField().getRow()).get();
+               Figure figure = turn.getBlackFigure();
                 Field sourceField = turn.getBlackSourceField();
                 Field destinationField = turn.getBlackDestinationField();
 
-                figure.move(board.getField(destinationField.getCol(),destinationField.getRow()));
+//                if(board.getField(destinationField.getCol(),destinationField.getRow()).get() != null) {
+//                    turn.getBlackDestinationField().setFigure(board.getField(destinationField.getCol(),destinationField.getRow()).get());
+//                }
+
+                //figure.move(board.getField(destinationField.getCol(),destinationField.getRow()));
+                if( board.getField(destinationField.getCol(),destinationField.getRow()).get() != null) {
+
+                    ((GridPane)content.getCenter()).getChildren().
+                            remove(board.getField(destinationField.getCol(),destinationField.getRow()).get().getImage());
+                    board.getField(destinationField.getCol(),destinationField.getRow()).setFigure(null);
+                }
+                board.getField(destinationField.getCol(),destinationField.getRow()).put(figure);
+                board.getField(sourceField.getCol(),sourceField.getRow()).setFigure(null);
 
                 // Vypis natacie vlavo
-                ChessNotationMapper mapper = new ChessNotationMapper(this);
+                ChessNotationMapper mapper = new ChessNotationMapper();
                 ChessTurnNotation notation = mapper.getNotation(turn);
                 Text notationText = (Text) notationsBox.getChildren().get(notationsBox.getChildren().size() - 1);
                 notationText.setText(notationText.getText() + notation.getBlackTurnNotation());
@@ -214,7 +330,7 @@ public class Game {
         }
     }
 
-    //TODO: zmena tahu po pretoceni hapruje
+    //TODO: vymazanie, nefunguje ked sa biely vrati z5 a zmeni tah
     public boolean move(Figure figure, Field field) {
 
         if(figure.canMove(field)) {
@@ -227,13 +343,33 @@ public class Game {
             destinationField.setFigure(field.get());
             destinationField.setBackground(field.getBackground());
             destinationField.setBoard(field.getBoard());
+
+
             if(figure.move(field)) {
+
+                board.getField(sourceField.getCol(),sourceField.getRow()).setFigure(null);
+
+                Figure king = getBoard().findFigure("K", null, null, null, isWhiteTurn());
+                Figure enemyKing = getBoard().findFigure("K", null, null, null, !isWhiteTurn());
+
+                boolean isCheck = isCheck(enemyKing);
+                boolean isCheckMate = isCheckMate(enemyKing);
+
+                if(!isCheck && !isCheck(king)) getCheckOrCheckMateText().setVisible(false);
+
                 if(figure.isWhite()) {
                     turn = new Turn();
                     turn.setTurnOrder(historyIndex + 1);
                     turn.setWhiteFigure(figure);
                     turn.setWhiteSourceField(sourceField);
                     turn.setWhiteDestinationField(destinationField);
+                    turn.setWhiteDestinationField(destinationField);
+                    if(turn.getWhiteDestinationField().get() != null) {
+                        turn.getWhiteDestinationField().get().setField(turn.getWhiteDestinationField());
+                    }
+
+                    if(isCheck && !isCheckMate) turn.setBlackCheck(true);
+                    if(isCheckMate) turn.setBlackCheckMate(true);
                     //TODO: dalsie casti notacie
 
                     if(historyIndex < history.size()) {
@@ -244,7 +380,7 @@ public class Game {
                     history.add(historyIndex, turn);
 
                     // Vypis natacie vlavo
-                    ChessNotationMapper mapper = new ChessNotationMapper(this);
+                    ChessNotationMapper mapper = new ChessNotationMapper();
                     ChessTurnNotation notation = mapper.getNotation(turn);
                     Text notationText = new Text( notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation() + " ");
                     notationText.setFont(Font.font("Arial", 20));
@@ -255,6 +391,14 @@ public class Game {
                     turn.setBlackFigure(figure);
                     turn.setBlackSourceField(sourceField);
                     turn.setBlackDestinationField(destinationField);
+                    turn.setBlackDestinationField(destinationField);
+                    if(turn.getBlackDestinationField().get() != null) {
+                        turn.getBlackDestinationField().get().setField(turn.getWhiteDestinationField());
+                    }
+
+
+                    if(isCheck && !isCheckMate) turn.setWhiteCheck(true);
+                    if(isCheckMate) turn.setWhiteCheckMate(true);
                     //TODO: dalsie casti notacie
 
                     if(historyIndex  < history.size() - 1) {
@@ -265,7 +409,7 @@ public class Game {
                     historyIndex++;
 
                     // Vypis natacie vlavo
-                    ChessNotationMapper mapper = new ChessNotationMapper(this);
+                    ChessNotationMapper mapper = new ChessNotationMapper();
                     ChessTurnNotation notation = mapper.getNotation(turn);
                     Text notationText = (Text) notationsBox.getChildren().get(notationsBox.getChildren().size() - 1);
                     notationText.setText(notationText.getText() + notation.getBlackTurnNotation());
@@ -278,6 +422,10 @@ public class Game {
         return false;
     }
 
+    public boolean isCheck(Figure king) {
+        return isCheck(king.getField(), king, new ArrayList<>());
+    }
+
     // TODO: otestovat
     //TODO: pridat tuto kontrolo pu tahu
     public boolean isCheck(Field checkField, Figure king) {
@@ -285,12 +433,21 @@ public class Game {
     }
 
     public boolean isCheck(Field checkField, Figure king, List<Figure> excludeList) {
-        boolean isKingWhite = !king.isWhite();
+        boolean isKingWhite = king.isWhite();
         List<Figure> enemyFigureList = getAllFigures(!isKingWhite);
         enemyFigureList.removeAll(excludeList);
 
         for(Figure figure : enemyFigureList) {
             if(figure.canMove(checkField)) {
+
+                Text text = getCheckOrCheckMateText();
+                if(king.isWhite()) {
+                    text.setText("White Check");
+                } else {
+                    text.setText("Black Check");
+                }
+                text.setVisible(true);
+
                 return true;
             }
         }
@@ -304,8 +461,7 @@ public class Game {
 
         if(!isCheck(checkField, king)) return false;
 
-        boolean isKingWhite = !king.isWhite();
-        boolean canMove = true;
+        boolean isKingWhite = king.isWhite();
         List<Figure> enemyFigureList = getAllFigures(!isKingWhite);
         List<Figure> allyFigureList = getAllFigures(isKingWhite);
         List<Field> kingsPossibleMovement = new ArrayList<>();
@@ -337,20 +493,43 @@ public class Game {
 
                 for(Figure allyFigure : allyFigureList) {
                     for(Field enemySurrounding : enemyFigure.getField().getSurrouding()) {
-                        if(allyFigure.canMove(enemySurrounding)) {
-                            List<Figure> excludedFigure  = new ArrayList<>();
-                            excludedFigure.add(enemyFigure);
-                            if(!isCheck(checkField, king, excludedFigure)) return false;
+                        if(enemySurrounding != null) {
+                            if(allyFigure.canMove(enemySurrounding)) {
+                                List<Figure> excludedFigure  = new ArrayList<>();
+                                excludedFigure.add(enemyFigure);
+                                if(!isCheck(checkField, king, excludedFigure)) return false;
+                            }
                         }
+
                     }
                 }
             }
         }
 
-
-
+        Text text = getCheckOrCheckMateText();
+        if(king.isWhite()) {
+            text.setText("White Check Mate");
+        } else {
+            text.setText("Black Check Mate");
+        }
+        text.setVisible(true);
 
         return true;
+    }
+
+    private boolean areAllFiguresOfTypeAlive(String figureType, boolean isWhite) {
+        int count;
+        switch (figureType) {
+            case "Q": count = 1; break;
+            case "S": case "J": case "V": count = 2; break;
+            default: count = 0;
+        }
+        for(Figure figure : getAllFigures(isWhite)) {
+            if(figure.getFigureChar().equals(figureType)) {
+                count --;
+            }
+        }
+        return count == 0;
     }
 
     private List<Figure> getAllFigures(boolean isWhite) {
@@ -359,8 +538,10 @@ public class Game {
         for(int i = 0; i < board.getSize(); i++) {
             for(int j = 0; j < board.getSize(); j++) {
                 Figure figure = board.getField(i, j).get();
-                if(figure.isWhite() == isWhite) {
-                    figureList.add(figure);
+                if(figure != null) {
+                    if(figure.isWhite() == isWhite) {
+                        figureList.add(figure);
+                    }
                 }
             }
         }
@@ -393,5 +574,29 @@ public class Game {
 
     public void setHistory(List<Turn> history) {
         this.history = history;
+    }
+
+    public List<Figure> getCapturedFigures() {
+        return capturedFigures;
+    }
+
+    public void setCapturedFigures(List<Figure> capturedFigures) {
+        this.capturedFigures = capturedFigures;
+    }
+
+    public Text getCheckOrCheckMateText() {
+        return checkOrCheckMateText;
+    }
+
+    public void setCheckOrCheckMateText(Text checkOrCheckMateText) {
+        this.checkOrCheckMateText = checkOrCheckMateText;
+    }
+
+    public Figure getPawnFigureToChange() {
+        return pawnFigureToChange;
+    }
+
+    public void setPawnFigureToChange(Figure pawnFigureToChange) {
+        this.pawnFigureToChange = pawnFigureToChange;
     }
 }

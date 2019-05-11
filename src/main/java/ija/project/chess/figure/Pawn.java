@@ -10,6 +10,11 @@ public class Pawn extends AbstractFigure {
 
     public boolean move(Field moveTo) {
         if(canMove(moveTo)) {
+            if(moveTo.getRow() == 0 && !isWhite) {
+                field.getBoard().getGame().showFiguresForChange(isWhite);
+            } else if(moveTo.getRow() == 7 && isWhite) {
+                field.getBoard().getGame().showFiguresForChange(isWhite);
+            }
             if(checkIfFieldContainsEnemyFigure(moveTo.getCol(), moveTo.getRow())) {
                 return capture(moveTo.getCol(), moveTo.getRow()) && moveTo.put(this);
             } else {
@@ -44,7 +49,9 @@ public class Pawn extends AbstractFigure {
                 else if(moveTo.get() != null) return false;
             }
         } else {
+
             if(Math.abs(fieldCol - moveToCol) != 1) return false;
+            else if(Math.abs(moveToRow - fieldRow) != 1) return false;
             else if(moveTo.get() == null) return false;
             else if(!checkIfFieldContainsEnemyFigure(moveToCol, moveToRow)) return false;
         }

@@ -5,6 +5,7 @@ import ija.project.chess.figure.Figure;
 import ija.project.chess.game.Game;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
+import javafx.scene.text.Text;
 
 public class Field {
 
@@ -80,30 +81,44 @@ public class Field {
     }
 
     public boolean put(Figure figure) {
-        if(isEmpty()) {
+        if(this.figure != null) {
             if(figure.getField() != null) {
+                System.out.println("P{ut " + figure.getFigureChar());
                 Field figureField = figure.getField();
                 figureField.remove(figure);
                 //board.getField(figureField.getCol(), figureField.getRow()).remove(figure);
             }
-            this.figure = figure;
-            figure.setField(this);
-            if(board.getGame() != null) {
-                GridPane gridPane = (GridPane)board.getGame().getContent().getCenter();
+        }
+        this.figure = figure;
+
+        figure.setField(this);
+        if(board.getGame() != null) {
+            GridPane gridPane = (GridPane)board.getGame().getContent().getCenter();
+            try {
+                gridPane.add(figure.getImage(), this.col + 1,this.row);
+            } catch (IllegalArgumentException e) {
+                gridPane.getChildren().remove(figure.getImage());
                 gridPane.add(figure.getImage(), this.col + 1,this.row);
             }
 
-            return true;
         }
-        return false;
+
+        return true;
     }
 
     public boolean remove(Figure figure) {
+        if(this.figure == null) {
+            //figure.setField(null);
+            return true;
+        }
         if(this.figure.equals(figure)) {
             if(!isEmpty()) {
-                GridPane gridPane = (GridPane)board.getGame().getContent().getCenter();
-                gridPane.getChildren().remove(figure.getImage());
-                figure.setField(null);
+                if(board.getGame() != null) {
+                    GridPane gridPane = (GridPane)board.getGame().getContent().getCenter();
+                    gridPane.getChildren().remove(figure.getImage());
+                }
+                //figure.getField().setFigure(null);
+                //figure.setField(null);
                 this.figure = null;
                 return true;
             }

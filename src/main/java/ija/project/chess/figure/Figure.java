@@ -16,4 +16,6 @@ public interface Figure {
     String getFigureChar();
 
     ImageView getImage();
+
+    boolean equals(Object obj);
 }

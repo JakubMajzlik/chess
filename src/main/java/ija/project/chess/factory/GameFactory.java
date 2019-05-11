@@ -1,9 +1,7 @@
 package ija.project.chess.factory;
 
 import ija.project.chess.board.Board;
-import ija.project.chess.figure.Knight;
-import ija.project.chess.figure.Pawn;
-import ija.project.chess.figure.Rook;
+import ija.project.chess.figure.*;
 import ija.project.chess.game.Game;
 
 public abstract class GameFactory {
@@ -13,22 +11,22 @@ public abstract class GameFactory {
         if(board.getSize() != 8) {
             return null;
         }
-        // TODO
+
         // White
 
         // Towers
         board.getField(0,0).put(new Rook(true));
         board.getField(7,0).put(new Rook(true));
 
-        //
-        //board.getField(2,0).put(new Archer(true));
-        //board.getField(5,0).put(new Archer(true));
+        // Bishop
+        board.getField(2,0).put(new Bishop(true));
+        board.getField(5,0).put(new Bishop(true));
 
         // Queen
-        //board.getField(4,0).put(new Queen(true));
+        board.getField(4,0).put(new Queen(true));
 
         // King
-        //board.getField(3,0).put(new King(true));
+        board.getField(3,0).put(new King(true));
 
         // Knight
         board.getField(1,0).put(new Knight(true));
@@ -46,15 +44,15 @@ public abstract class GameFactory {
         board.getField(0,7).put(new Rook(false));
         board.getField(7,7).put(new Rook(false));
 
-        //
-        //board.getField(2,7).put(new Archer(false));
-        //board.getField(5,7).put(new Archer(false));
+        // Bishop
+        board.getField(2,7).put(new Bishop(false));
+        board.getField(5,7).put(new Bishop(false));
 
         // Queen
-        //board.getField(4,7).put(new Queen(false));
+        board.getField(4,7).put(new Queen(false));
 
         // King
-        //board.getField(3,7).put(new King(false));
+        board.getField(3,7).put(new King(false));
 
         // Knight
         board.getField(1,7).put(new Knight(false));

@@ -83,16 +83,19 @@ public class Board {
                 if(foundedFigure != null && foundedFigure.isWhite() == isWhite
                     && foundedFigure.getFigureChar().equals(figureType)) {
 
-
+                    //TODO: Mozno to teraz rozbijem
+                    foundedFigure.setField(field[i][j]);
 
                     if(column != null && column.intValue() == foundedFigure.getField().getCol()) {
                         figure = foundedFigure;
                     } else if(row != null && row.intValue() == foundedFigure.getField().getRow()) {
                         figure = foundedFigure;
                     } else if(column == null && row == null) {
-                        if(canMoveTo == null) {
-                            figure = foundedFigure;
-                        } else if(foundedFigure.canMove(canMoveTo)) {
+                        if(canMoveTo != null) {
+                            if(foundedFigure.canMove(canMoveTo)) {
+                                figure = foundedFigure;
+                            }
+                        } else {
                             figure = foundedFigure;
                         }
                     }
