@@ -8,30 +8,40 @@ public class Pawn extends AbstractFigure {
         super("p", white);
     }
 
-    public boolean move(Field moveTo) {
-        int moveToCol = moveTo.getCol();
-        int moveToRow = moveTo.getRow();
-
-        if(canMove(moveTo) == false) return false;
-
-        if(checkIfFieldContainsEnemyFigure(moveToCol, moveToRow)) {
-            return capture(moveToCol, moveToRow) && moveTo.put(this);
-        } else {
-            return moveTo.put(this);
-        }
-    }
-
+    @Override
     public boolean canMove(Field moveTo) {
-        int fieldCol = field.getCol();
-        int fieldRow = field.getRow();
 
-        int moveToCol = moveTo.getCol();
-        int moveToRow = moveTo.getRow();
+            int fieldCol = field.getCol();
+            int fieldRow = field.getRow();
 
-        if( moveTo.equals(field) || fieldCol != moveToCol) return false;
 
-        if(isWhite && fieldRow >= moveToRow) return false;
-        else if(!isWhite && fieldRow <= moveToRow) return false;
-        return true;
-    }
+            int moveToCol = moveTo.getCol();
+            int moveToRow = moveTo.getRow();
+
+            if( moveTo.equals(field)) return false;
+
+
+            if(fieldCol == moveToCol) {
+                if(isWhite ){
+                    if(fieldRow >= moveToRow) return false;
+                    else if(fieldRow == 1 && moveToRow > 3) return false;
+                    else if(fieldRow > 1 && (moveToRow - fieldRow) > 1) return false;
+                    else if(moveTo.get() != null) return false;
+
+                } else {
+                    if(fieldRow <= moveToRow) return false;
+                    else if(fieldRow == 6 && moveToRow < 4) return false;
+                    else if(fieldRow < 6 && (fieldRow - moveToRow) > 1) return false;
+                    else if(moveTo.get() != null) return false;
+                }
+            } else {
+
+
+                if(Math.abs(fieldCol - moveToCol) != 1) return false;
+                else if(Math.abs(moveToRow - fieldRow) != 1) return false;
+                else if(moveTo.get() == null) return false;
+                else if(!checkIfFieldContainsEnemyFigure(moveToCol, moveToRow)) return false;
+            }
+            return true;
+        }
 }

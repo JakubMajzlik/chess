@@ -11,6 +11,8 @@ public class Bishop extends AbstractFigure {
         super("S", white);
     }
 
+
+    @Override
     public boolean canMove(Field moveTo) {
         int fieldCol = field.getCol();
         int fieldRow = field.getRow();
@@ -26,6 +28,35 @@ public class Bishop extends AbstractFigure {
         //nemam to overene ale nenasiel som priklad kde by to neplatilo
         if(checkCol != checkRow) return false;
 
-        return true;
+        int x = fieldRow;//x ako os X
+        int y = fieldCol;//y ako os Y
+        while(true) {
+            if(fieldRow < moveToRow) x++;
+            else x--;
+
+            if(fieldCol < moveToCol) y++;
+            else y--;
+
+            //vrati figuru ktora stoji vezi v ceste
+            if (field.getBoard().getField(y, x).get() != null ){
+                //ak naslo figuru az na konci cesty
+                if( y == moveToCol && x == moveToRow) {
+                    //ak je to enmy figura
+                    if(checkIfFieldContainsEnemyFigure(y, x)) {
+                        //vzhodi a spravi presuun
+                        return true;
+                        //chceme vyhodit vlastnu figuru
+                    } else {
+                        return false;
+                    }
+                    //nejaka figura zavadzia v ceste
+                } else {
+                    return false;
+                }
+            }
+            //nic nezavadzia
+            if( y == moveToCol && x == moveToRow)
+                return true;
+        }
     }
 }

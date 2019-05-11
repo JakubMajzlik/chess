@@ -21,14 +21,39 @@ public class Rook extends AbstractFigure {
 
         if( fieldCol == moveToCol && fieldRow == moveToRow) return false;
 
-        int checkCol = Math.abs(fieldCol - moveToCol);
-        int checkRow = Math.abs(fieldRow - moveToRow);
-
-        //nemam to overene ale nenasiel som priklad kde by to neplatilo
-        if(checkCol == 0 && checkRow > 0 || checkCol > 0 && checkRow == 0);
-        else return false;
-
-        return true;
+        if( fieldCol == moveToCol) {
+            for(int row = fieldRow + 1; row <= moveToRow; row++) {
+                if (field.getBoard().getField(moveToCol, row).get() != null ){
+                    if(row == moveToRow) {
+                        if(checkIfFieldContainsEnemyFigure(moveToCol, row)) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        }else if(fieldRow == moveToRow) {
+            for(int col = fieldCol + 1; col <= moveToCol; col++) {
+                if (field.getBoard().getField(col, moveToRow).get() != null) {
+                    if(col == moveToCol) {
+                        if(checkIfFieldContainsEnemyFigure(col, moveToRow)) {
+                            return true;
+                        } else {
+                            return false;
+                        }
+                    } else {
+                        return false;
+                    }
+                }
+            }
+            return true;
+        } else {
+            return false;
+        }
     }
 
 

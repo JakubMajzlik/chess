@@ -72,7 +72,11 @@ public class ChessNotationMapper {
 
         setTurnAttributes(notation, turn, true);
 
-        setTurnAttributes(notation, turn, false);
+        if(notation.getBlackTurnNotation() != null && notation.getBlackTurnNotation().length() > 0) {
+            setTurnAttributes(notation, turn, false);
+        }
+
+
 
         return turn;
     }
