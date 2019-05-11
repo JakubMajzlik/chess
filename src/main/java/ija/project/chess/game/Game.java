@@ -287,6 +287,8 @@ public class Game {
                         .getImage(), destinationField.getCol() + 1, destinationField.getRow());
 //                board.getField(destinationField.getCol(), destinationField.getRow()).get()
 //                        .setField(board.getField(destinationField.getCol(), destinationField.getRow()));
+            } else {
+                board.getField(destinationField.getCol(), destinationField.getRow()).setFigure(null);
             }
 
             // Vypis natacie vlavo
@@ -314,7 +316,10 @@ public class Game {
 //                board.getField(destinationField.getCol(), destinationField.getRow()).get()
 //                        .setField(board.getField(destinationField.getCol(), destinationField.getRow()));
 
+            } else {
+                board.getField(destinationField.getCol(), destinationField.getRow()).setFigure(null);
             }
+
 
             notationsBox.getChildren().remove(notationsBox.getChildren().size() - 1);
 
