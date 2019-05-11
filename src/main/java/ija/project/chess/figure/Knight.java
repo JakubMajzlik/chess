@@ -15,14 +15,13 @@ public class Knight extends AbstractFigure {
         int moveToCol = moveTo.getCol();
         int moveToRow = moveTo.getRow();
 
-        if(canMove(moveTo)) {
-        	if(checkIfFieldContainsEnemyFigure(moveToCol, moveToRow)) {
-            	//vzhodi a spravi presuun
-                return capture(moveToCol, moveToRow) && moveTo.put(this);
-            } else {
-            	return moveTo.put(this);
-            }
-        } else return false;
+        if(canMove(moveTo) == false) return false;
+
+        if(checkIfFieldContainsEnemyFigure(moveToCol, moveToRow)) {
+            return capture(moveToCol, moveToRow) && moveTo.put(this);
+        } else {
+            return moveTo.put(this);
+        }
     }
 
     public boolean canMove(Field moveTo) {
@@ -32,34 +31,16 @@ public class Knight extends AbstractFigure {
         int moveToCol = moveTo.getCol();
         int moveToRow = moveTo.getRow();
 
-        boolean makeMove = false;
+        if( fieldCol == moveToCol && fieldRow == moveToRow) return false;
 
-        //moznsti na prvom riadku
-        int possibleCol = fieldCol + 2;
-        int possibleRow = fieldRow - 1;
-        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
-        possibleRow = fieldRow + 1;
-        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
-        //moznsti na druhom riadku
-        possibleCol = fieldCol + 1;
-        possibleRow = fieldRow - 2;
-        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
-        possibleRow = fieldRow + 2;
-        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
-        //moznsti na tretom riadku
-        possibleCol = fieldCol - 1;
-        possibleRow = fieldRow - 2;
-        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
-        possibleRow = fieldRow + 2;
-        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
-        //moznsti na stvrtom riadku
-        possibleCol = fieldCol - 2;
-        possibleRow = fieldRow - 1;
-        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
-        possibleRow = fieldRow + 1;
-        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
+        int checkCol = Math.abs(fieldCol - moveToCol);
+        int checkRow = Math.abs(fieldRow - moveToRow);
 
-        return makeMove;
+        //nemam to overene ale nenasiel som priklad kde by to neplatilo
+        if(checkCol == 1 && checkRow == 2 || checkCol == 2 && checkRow == 1);
+        else return false;
+
+        return true;
     }
     
 }

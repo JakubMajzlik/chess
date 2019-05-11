@@ -2,6 +2,7 @@ package ija.project.chess.controller;
 
 import ija.project.chess.board.Board;
 import ija.project.chess.exceptions.ChessNotationMapperException;
+import ija.project.chess.exceptions.WrongChessNotationException;
 import ija.project.chess.exceptions.WrongChessNotationFileException;
 import ija.project.chess.factory.GameFactory;
 import ija.project.chess.figure.Figure;
@@ -10,6 +11,7 @@ import ija.project.chess.notation.ChessTurnNotation;
 import ija.project.chess.parser.ChessNotationMapper;
 import ija.project.chess.reader.ChessNotationReader;
 import ija.project.chess.turn.Turn;
+import ija.project.chess.writer.ChessNotationWriter;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -22,6 +24,7 @@ import javafx.stage.Stage;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,11 +35,15 @@ public class Controller implements Initializable {
     @FXML
     private TabPane tabPane;
 
+    private List<Game> gameList = new ArrayList<>();
+
     @FXML
     public void newGame(ActionEvent event) {
         Board board = new Board(8);
         Game game = GameFactory.createChessGame(board);
         board.setGame(game);
+
+        gameList.add(game);
 
         Tab tab = new Tab();
         tab.setText("Game #" + (tabPane.getTabs().size() + 1));
@@ -61,6 +68,8 @@ public class Controller implements Initializable {
         Board board = new Board(8);
         Game game = GameFactory.createChessGame(board);
         board.setGame(game);
+
+        gameList.add(game);
 
         ChessNotationReader reader = null;
         ChessNotationMapper mapper = new ChessNotationMapper(game);
@@ -98,8 +107,27 @@ public class Controller implements Initializable {
 
     @FXML
     public void saveGame(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Chess notation", "*.chess");
+        fileChooser.getExtensionFilters().add(filter);
 
+        File file = fileChooser.showSaveDialog(new Stage());
+        ChessNotationWriter writer = null;
+        try {
+            Game game = gameList.get(tabPane.getSelectionModel().getSelectedIndex());
+            ChessNotationMapper mapper = new ChessNotationMapper(game);
+            writer = new ChessNotationWriter(file);
 
+            for(Turn turn :game.getHistory()) {
+                writer.appendNotation(mapper.getNotation(turn));
+            }
+        } catch (IOException | WrongChessNotationException e) {
+            e.printStackTrace();
+        } finally {
+            if(writer != null) {
+                writer.close();
+            }
+        }
 
     }
 

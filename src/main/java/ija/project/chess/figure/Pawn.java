@@ -9,23 +9,18 @@ public class Pawn extends AbstractFigure {
     }
 
     public boolean move(Field moveTo) {
-        if(canMove(moveTo)) {
-            if(moveTo.getRow() == 0 && !isWhite) {
-                field.getBoard().getGame().showFiguresForChange(isWhite);
-            } else if(moveTo.getRow() == 7 && isWhite) {
-                field.getBoard().getGame().showFiguresForChange(isWhite);
-            }
-            if(checkIfFieldContainsEnemyFigure(moveTo.getCol(), moveTo.getRow())) {
-                return capture(moveTo.getCol(), moveTo.getRow()) && moveTo.put(this);
-            } else {
-                return moveTo.put(this);
-            }
+        int moveToCol = moveTo.getCol();
+        int moveToRow = moveTo.getRow();
+
+        if(canMove(moveTo) == false) return false;
+
+        if(checkIfFieldContainsEnemyFigure(moveToCol, moveToRow)) {
+            return capture(moveToCol, moveToRow) && moveTo.put(this);
         } else {
-            return false;
+            return moveTo.put(this);
         }
     }
 
-    @Override
     public boolean canMove(Field moveTo) {
         int fieldCol = field.getCol();
         int fieldRow = field.getRow();
@@ -33,28 +28,10 @@ public class Pawn extends AbstractFigure {
         int moveToCol = moveTo.getCol();
         int moveToRow = moveTo.getRow();
 
-        if( moveTo.equals(field)) return false;
+        if( moveTo.equals(field) || fieldCol != moveToCol) return false;
 
-        if(fieldCol == moveToCol) {
-            if(isWhite ){
-                if(fieldRow >= moveToRow) return false;
-                else if(fieldRow == 1 && moveToRow > 3) return false;
-                else if(fieldRow > 1 && (moveToRow - fieldRow) > 1) return false;
-                else if(moveTo.get() != null) return false;
-
-            } else {
-                if(fieldRow <= moveToRow) return false;
-                else if(fieldRow == 6 && moveToRow < 4) return false;
-                else if(fieldRow < 6 && (fieldRow - moveToRow) > 1) return false;
-                else if(moveTo.get() != null) return false;
-            }
-        } else {
-
-            if(Math.abs(fieldCol - moveToCol) != 1) return false;
-            else if(Math.abs(moveToRow - fieldRow) != 1) return false;
-            else if(moveTo.get() == null) return false;
-            else if(!checkIfFieldContainsEnemyFigure(moveToCol, moveToRow)) return false;
-        }
+        if(isWhite && fieldRow >= moveToRow) return false;
+        else if(!isWhite && fieldRow <= moveToRow) return false;
         return true;
     }
 }

@@ -11,29 +11,6 @@ public class Bishop extends AbstractFigure {
         super("S", white);
     }
 
-    public boolean move(Field moveTo) {
-        int moveToCol = moveTo.getCol();
-        int moveToRow = moveTo.getRow();
-
-        if(canMove(moveTo)) {
-            if (field.getBoard().getField(moveToCol, moveToRow).get() != null ){
-                //ak je to enmy figura
-                if(checkIfFieldContainsEnemyFigure(moveToCol, moveToRow)) {
-                    //vzhodi a spravi presuun
-                    return capture(moveToCol, moveToRow) && moveTo.put(this);
-                    //chceme vyhodit vlastnu figuru
-                } else {
-                    return false;
-                }
-            } else {
-                return moveTo.put(this);
-            }
-        }
-
-        return false;
-    }
-
-    @Override
     public boolean canMove(Field moveTo) {
         int fieldCol = field.getCol();
         int fieldRow = field.getRow();
@@ -49,35 +26,6 @@ public class Bishop extends AbstractFigure {
         //nemam to overene ale nenasiel som priklad kde by to neplatilo
         if(checkCol != checkRow) return false;
 
-        int x = fieldRow;//x ako os X
-        int y = fieldCol;//y ako os Y
-        while(true) {
-            if(fieldRow < moveToRow) x++;
-            else x--;
-
-            if(fieldCol < moveToCol) y++;
-            else y--;
-
-            //vrati figuru ktora stoji vezi v ceste
-            if (field.getBoard().getField(y, x).get() != null ){
-                //ak naslo figuru az na konci cesty
-                if( y == moveToCol && x == moveToRow) {
-                    //ak je to enmy figura
-                    if(checkIfFieldContainsEnemyFigure(y, x)) {
-                        //vzhodi a spravi presuun
-                        return true;
-                        //chceme vyhodit vlastnu figuru
-                    } else {
-                        return false;
-                    }
-                    //nejaka figura zavadzia v ceste
-                } else {
-                    return false;
-                }
-            }
-            //nic nezavadzia
-            if( y == moveToCol && x == moveToRow)
-                return true;
-        }
+        return true;
     }
 }

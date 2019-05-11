@@ -8,9 +8,13 @@ import ija.project.chess.parser.ChessNotationMapper;
 import ija.project.chess.turn.Turn;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
+import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Separator;
+import javafx.scene.control.Slider;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.BorderPane;
@@ -67,8 +71,13 @@ public class Game {
         Button play = new Button("Play");
         Button stop = new Button("Stop");
         Button forward = new Button("Forward");
+        Button forwardAutoplay = new Button("Forward AutoPlay");
+        Button backwardAutoplay = new Button("Backward AutoPlay");
+        Slider autoplaySpeed = new Slider();
 
-
+        // 10 = 10s
+        autoplaySpeed.setMax(10);
+        autoplaySpeed.setMin(0.1);
 
 
         backward.setOnMouseClicked(e -> {
@@ -87,29 +96,28 @@ public class Game {
             stop.setVisible(true);
             play.setVisible(false);
             autoPlay = true;
-
             timer =  new Timer();
 
-                   timer.schedule(
-                            new TimerTask() {
+               timer.schedule(
+                    new TimerTask() {
 
-                                @Override
-                                public void run() {
-                                    Platform.runLater(() -> {
-                                        if(autoPlay) {
-                                            if (historyIndex < history.size()) {
-                                                forward();
-                                            } else {
-                                                autoPlay = false;
-                                                play.setVisible(true);
-                                                stop.setVisible(false);
-                                                timer.cancel();
-                                                timer.purge();
-                                            }
-                                        }
-                                    });
+                        @Override
+                        public void run() {
+                            Platform.runLater(() -> {
+                                if(autoPlay) {
+                                    if (historyIndex < history.size()) {
+                                        forward();
+                                    } else {
+                                        autoPlay = false;
+                                        play.setVisible(true);
+                                        stop.setVisible(false);
+                                        timer.cancel();
+                                        timer.purge();
+                                    }
                                 }
-                            }, 0, 500);
+                            });
+                        }
+                     }, 0, 500);
         });
 
         stop.setOnMouseClicked(e -> {
@@ -123,9 +131,18 @@ public class Game {
         stop.setVisible(false);
 
         topPanel.getChildren().add(backward);
+        topPanel.getChildren().add(forward);
+
+        Separator separator = new Separator();
+        separator.setOrientation(Orientation.VERTICAL);
+        separator.setPadding(new Insets(0, 50, 0, 50));
+        topPanel.getChildren().add(separator);
+
         topPanel.getChildren().add(play);
         topPanel.getChildren().add(stop);
-        topPanel.getChildren().add(forward);
+        topPanel.getChildren().add(forwardAutoplay);
+        topPanel.getChildren().add(backwardAutoplay);
+        topPanel.getChildren().add(autoplaySpeed);
 
         topPanel.setAlignment(Pos.CENTER);
 
