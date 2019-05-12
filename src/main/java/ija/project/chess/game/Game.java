@@ -6,12 +6,10 @@ import ija.project.chess.figure.Figure;
 import ija.project.chess.notation.ChessTurnNotation;
 import ija.project.chess.parser.ChessNotationMapper;
 import ija.project.chess.turn.Turn;
-import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Separator;
 import javafx.scene.control.Slider;
@@ -24,7 +22,6 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
-import javafx.util.Duration;
 
 import java.util.*;
 
@@ -38,6 +35,11 @@ public class Game {
     private Turn turn;
 
     private List<Figure> capturedFigures = new ArrayList<>();
+
+    private Field sourceMarkField = null;
+    private ImageView originalSourceMarkFieldBackground = null;
+    private Field destinationMarkField = null;
+    private ImageView originalDestinationMarkFieldBackground = null;
 
     private BorderPane content = new BorderPane();
     private VBox notationsBox;
@@ -57,8 +59,13 @@ public class Game {
     ImageView queenImage;
     ImageView knightImage;
 
+    ImageView markedSourceBg;
+    ImageView markedDestinationBg;
+
     public Game(Board board) {
         this.board = board;
+        markedSourceBg = new ImageView("images/markedbg.png");
+        markedDestinationBg = new ImageView("images/markedbg.png");
         initializeGameBoardUI();
     }
 
@@ -286,6 +293,39 @@ public class Game {
         return null;
     }
 
+    private void markFields() {
+        removeMarkedFields();
+
+        if(turn != null) {
+            if(isWhiteTurn()) {
+                if(historyIndex < history.size()) {
+                    if(turn.getWhiteFigure() != null) {
+                        ((GridPane)content.getCenter()).add(markedSourceBg, turn.getWhiteSourceField().getCol() + 1, turn.getWhiteSourceField().getRow());
+
+                        ((GridPane)content.getCenter()).add(markedDestinationBg, turn.getWhiteDestinationField().getCol() + 1, turn.getWhiteDestinationField().getRow());
+
+                    }
+                }
+
+            } else {
+                if(turn.getBlackFigure() != null) {
+                    ((GridPane)content.getCenter()).add(markedSourceBg, turn.getBlackSourceField().getCol() + 1, turn.getBlackSourceField().getRow());
+
+                    ((GridPane)content.getCenter()).add(markedDestinationBg, turn.getBlackDestinationField().getCol() + 1, turn.getBlackDestinationField().getRow());
+                }
+            }
+        }
+    }
+
+    private void removeMarkedFields() {
+
+        ((GridPane)content.getCenter()).getChildren().remove(markedSourceBg);
+
+
+        ((GridPane)content.getCenter()).getChildren().remove(markedDestinationBg);
+
+    }
+
     public void backward() {
         if(isWhiteTurn()) {
             historyIndex--;
@@ -302,8 +342,6 @@ public class Game {
                 board.getField(destinationField.getCol(), destinationField.getRow()).setFigure(destinationField.get());
                 ((GridPane)content.getCenter()).add(destinationField.get()
                         .getImage(), destinationField.getCol() + 1, destinationField.getRow());
-//                board.getField(destinationField.getCol(), destinationField.getRow()).get()
-//                        .setField(board.getField(destinationField.getCol(), destinationField.getRow()));
             } else {
                 board.getField(destinationField.getCol(), destinationField.getRow()).setFigure(null);
             }
@@ -329,10 +367,6 @@ public class Game {
                 board.getField(destinationField.getCol(), destinationField.getRow()).setFigure(destinationField.get());
                 ((GridPane)content.getCenter()).add(destinationField.get()
                         .getImage(), destinationField.getCol() + 1, destinationField.getRow());
-
-//                board.getField(destinationField.getCol(), destinationField.getRow()).get()
-//                        .setField(board.getField(destinationField.getCol(), destinationField.getRow()));
-
             } else {
                 board.getField(destinationField.getCol(), destinationField.getRow()).setFigure(null);
             }
@@ -341,6 +375,8 @@ public class Game {
             notationsBox.getChildren().remove(notationsBox.getChildren().size() - 1);
 
         }
+
+        markFields();
     }
 
     public void forward() {
@@ -412,6 +448,7 @@ public class Game {
                 }
             }
         }
+        markFields();
     }
 
     public boolean move(Figure figure, Field field) {
@@ -429,7 +466,7 @@ public class Game {
 
 
             if(figure.move(field)) {
-
+                removeMarkedFields();
                 board.getField(sourceField.getCol(),sourceField.getRow()).setFigure(null);
 
                 Figure king = getBoard().findFigure("K", null, null, null, isWhiteTurn());
