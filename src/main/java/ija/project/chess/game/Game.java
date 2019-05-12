@@ -23,6 +23,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 
+import java.text.DecimalFormat;
 import java.util.*;
 
 public class Game {
@@ -47,6 +48,8 @@ public class Game {
     private boolean whiteTurn = true;
 
     private boolean autoPlay;
+    private boolean forwardPlay = true;
+    private double autoPlaySpeedInSeconds = 0.5;
     private Timer timer;
 
     ImageView rookImage;
@@ -64,6 +67,13 @@ public class Game {
         initializeGameBoardUI();
     }
 
+    public void setForwardPlay(boolean forwardPlay) {
+        this.forwardPlay = forwardPlay;
+    }
+
+    public void setAutoPlaySpeedInSeconds(double autoPlaySpeedInSeconds) {
+        this.autoPlaySpeedInSeconds = autoPlaySpeedInSeconds;
+    }
 
     private void initializeGameBoardUI() {
         // TOP PANEL
@@ -79,11 +89,26 @@ public class Game {
         Button forwardAutoplay = new Button("Forward AutoPlay");
         Button backwardAutoplay = new Button("Backward AutoPlay");
         Slider autoplaySpeed = new Slider();
+        Text speedText = new Text("Speed: " + autoPlaySpeedInSeconds);
 
         // 10 = 10s
-        autoplaySpeed.setMax(10);
+        autoplaySpeed.setMax(5);
         autoplaySpeed.setMin(0.1);
 
+        autoplaySpeed.valueProperty().addListener( e -> {
+            DecimalFormat format = new DecimalFormat("#.##");
+
+            speedText.setText("Speed: " + format.format((double)autoplaySpeed.getValue()));
+            setAutoPlaySpeedInSeconds((double)autoplaySpeed.getValue());
+        });
+
+        forwardAutoplay.setOnMouseClicked(e -> {
+            setForwardPlay(true);
+        });
+
+        backwardAutoplay.setOnMouseClicked(e -> {
+            setForwardPlay(false);
+        });
 
         backward.setOnMouseClicked(e -> {
             if(historyIndex > 0 || !isWhiteTurn()){
@@ -103,26 +128,38 @@ public class Game {
             autoPlay = true;
             timer =  new Timer();
 
-               timer.schedule(
-                    new TimerTask() {
+               timer.schedule(new TimerTask() {
 
                         @Override
                         public void run() {
-                            Platform.runLater(() -> {
-                                if(autoPlay) {
-                                    if (historyIndex < history.size()) {
-                                        forward();
-                                    } else {
-                                        autoPlay = false;
-                                        play.setVisible(true);
-                                        stop.setVisible(false);
-                                        timer.cancel();
-                                        timer.purge();
-                                    }
+                    Platform.runLater(() -> {
+                        if(autoPlay) {
+                            if(forwardPlay) {
+                                if (historyIndex < history.size()) {
+                                    forward();
+                                } else {
+                                    autoPlay = false;
+                                    play.setVisible(true);
+                                    stop.setVisible(false);
+                                    timer.cancel();
+                                    timer.purge();
                                 }
-                            });
+                            } else {
+                                if(historyIndex > 0 || !isWhiteTurn()){
+                                    backward();
+                                } else {
+                                    autoPlay = false;
+                                    play.setVisible(true);
+                                    stop.setVisible(false);
+                                    timer.cancel();
+                                    timer.purge();
+                                }
+                            }
+
                         }
-                     }, 0, 500);
+                    });
+                }
+             }, 0, (int)(autoPlaySpeedInSeconds * 1000));
         });
 
         stop.setOnMouseClicked(e -> {
@@ -162,6 +199,7 @@ public class Game {
         topPanel.getChildren().add(forwardAutoplay);
         topPanel.getChildren().add(backwardAutoplay);
         topPanel.getChildren().add(autoplaySpeed);
+        topPanel.getChildren().add(speedText);
 
         topPanel.setAlignment(Pos.CENTER);
 
