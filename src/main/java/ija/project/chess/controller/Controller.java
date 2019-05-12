@@ -49,6 +49,11 @@ public class Controller implements Initializable {
         tab.setText("Game #" + (tabPane.getTabs().size() + 1));
         tab.setContent(game.getContent());
 
+        tab.setOnCloseRequest(e -> {
+            int gameid = tabPane.getSelectionModel().getSelectedIndex();
+            gameList.remove(gameid);
+        });
+
         tabPane.getTabs().add(tab);
     }
 
@@ -94,6 +99,11 @@ public class Controller implements Initializable {
             Tab tab = new Tab();
             tab.setText("Game #" + (tabPane.getTabs().size() + 1));
             tab.setContent(game.getContent());
+
+            tab.setOnCloseRequest(e -> {
+                int gameid = tabPane.getSelectionModel().getSelectedIndex();
+                gameList.remove(gameid);
+            });
 
             tabPane.getTabs().add(tab);
         } catch (FileNotFoundException e) {

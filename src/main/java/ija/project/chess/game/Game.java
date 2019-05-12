@@ -346,6 +346,17 @@ public class Game {
                 board.getField(destinationField.getCol(), destinationField.getRow()).setFigure(null);
             }
 
+            Text checktext = getCheckOrCheckMateText();
+            if(turn.isBlackCheck()) {
+                checktext.setText("Black Check");
+                checktext.setVisible(true);
+            } else if(turn.isBlackCheckMate()){
+                checktext.setText("Black Check Mate");
+                checktext.setVisible(true);
+            } else {
+                checktext.setVisible(false);
+            }
+
             // Vypis natacie vlavo
             ChessNotationMapper mapper = new ChessNotationMapper();
             ChessTurnNotation notation = mapper.getNotation(turn);
@@ -370,7 +381,16 @@ public class Game {
             } else {
                 board.getField(destinationField.getCol(), destinationField.getRow()).setFigure(null);
             }
-
+            Text checktext = getCheckOrCheckMateText();
+            if(turn.isWhiteCheck()) {
+                checktext.setText("White Check");
+                checktext.setVisible(true);
+            } else if(turn.isWhiteCheckMate()){
+                checktext.setText("WhiteCheck Mate");
+                checktext.setVisible(true);
+            } else {
+                checktext.setVisible(false);
+            }
 
             notationsBox.getChildren().remove(notationsBox.getChildren().size() - 1);
 
@@ -392,6 +412,17 @@ public class Game {
 
                 Field sourceField = turn.getWhiteSourceField();
                 Field destinationField = turn.getWhiteDestinationField();
+
+                Text checktext = getCheckOrCheckMateText();
+                if(turn.isBlackCheck()) {
+                    checktext.setText("Black Check");
+                    checktext.setVisible(true);
+                } else if(turn.isBlackCheckMate()){
+                    checktext.setText("Black Check Mate");
+                    checktext.setVisible(true);
+                } else {
+                    checktext.setVisible(false);
+                }
 
                 if( board.getField(destinationField.getCol(),destinationField.getRow()).get() != null) {
 
@@ -416,6 +447,16 @@ public class Game {
                 Field sourceField = turn.getBlackSourceField();
                 Field destinationField = turn.getBlackDestinationField();
 
+                Text checktext = getCheckOrCheckMateText();
+                if(turn.isWhiteCheck()) {
+                    checktext.setText("White Check");
+                    checktext.setVisible(true);
+                } else if(turn.isWhiteCheckMate()){
+                    checktext.setText("WhiteCheck Mate");
+                    checktext.setVisible(true);
+                } else {
+                    checktext.setVisible(false);
+                }
 
                 if( board.getField(destinationField.getCol(),destinationField.getRow()).get() != null) {
 
