@@ -442,6 +442,11 @@ public class Game {
                 Text notationText = (Text) notationsBox.getChildren().get(notationsBox.getChildren().size() - 1);
                 notationText.setText(notationText.getText() + notation.getBlackTurnNotation());
 
+                notationText.setOnMouseClicked(e -> {
+                    Text text = (Text)e.getSource();
+                    backTo(text);
+                });
+
                 historyIndex++;
                 if(historyIndex < history.size()) {
                     turn = history.get(historyIndex);
@@ -449,6 +454,14 @@ public class Game {
             }
         }
         markFields();
+    }
+
+    private void backTo(Text text) {
+        int clickedTurnOrder = Integer.parseInt(text.getText().substring(0,text.getText().indexOf('.')));
+        while(historyIndex > clickedTurnOrder || !isWhiteTurn()) {
+            backward();
+        }
+        //System.out.println(clickedTurnOrder);
     }
 
     public boolean move(Figure figure, Field field) {
@@ -504,6 +517,12 @@ public class Game {
                     ChessTurnNotation notation = mapper.getNotation(turn);
                     Text notationText = new Text( notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation() + " ");
                     notationText.setFont(Font.font("Arial", 20));
+
+                    notationText.setOnMouseClicked(e -> {
+                        Text text = (Text)e.getSource();
+                        backTo(text);
+                    });
+
                     notationsBox.getChildren().add(notationText);
 
                     return true;
