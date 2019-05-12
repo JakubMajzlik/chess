@@ -67,9 +67,12 @@ public class Game {
         // TOP PANEL
         HBox topPanel = new HBox();
 
+        Button restart = new Button("Restart");
+
         Button backward = new Button("Backward");
-        Button play = new Button("Play");
         Button stop = new Button("Stop");
+
+        Button play = new Button("Play");
         Button forward = new Button("Forward");
         Button forwardAutoplay = new Button("Forward AutoPlay");
         Button backwardAutoplay = new Button("Backward AutoPlay");
@@ -128,15 +131,29 @@ public class Game {
             autoPlay = false;
         });
 
+        restart.setOnMouseClicked( e -> {
+            while(historyIndex > 0 || !isWhiteTurn()){
+                backward();
+            }
+        });
+
         stop.setVisible(false);
+
+        Separator separator1 = new Separator();
+        separator1.setOrientation(Orientation.VERTICAL);
+        separator1.setPadding(new Insets(0, 50, 0, 50));
+        Separator separator2 = new Separator();
+        separator2.setOrientation(Orientation.VERTICAL);
+        separator2.setPadding(new Insets(0, 50, 0, 50));
+
+        topPanel.getChildren().add(restart);
+
+        topPanel.getChildren().add(separator1);
 
         topPanel.getChildren().add(backward);
         topPanel.getChildren().add(forward);
 
-        Separator separator = new Separator();
-        separator.setOrientation(Orientation.VERTICAL);
-        separator.setPadding(new Insets(0, 50, 0, 50));
-        topPanel.getChildren().add(separator);
+        topPanel.getChildren().add(separator2);
 
         topPanel.getChildren().add(play);
         topPanel.getChildren().add(stop);
@@ -397,7 +414,6 @@ public class Game {
         }
     }
 
-    //TODO: vymazanie, nefunguje ked sa biely vrati z5 a zmeni tah
     public boolean move(Figure figure, Field field) {
 
         if(figure.canMove(field)) {
