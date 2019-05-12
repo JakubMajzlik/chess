@@ -241,6 +241,11 @@ public class ChessNotationMapper {
                 if(isCharacterInRangeFromaToh(c)){
                     int column = c - 'a';
 
+                    if(nextC == 'x') {
+                        c = nextNextC;
+                        nextC = nextNextNextC;
+                    }
+
                     if(isCharacterInRangeFrom1To8(nextC)) {
                         Field moveToField;
                         moveToField = board.getField(c - 'a', nextC - '1');
@@ -274,13 +279,13 @@ public class ChessNotationMapper {
                 if(notation.getWhiteTurnNotation().length() >= 3) {
                      nextNextC = notation.getWhiteTurnNotation().charAt(2);
                 }
-                if(c == 'x') {
+                if(nextC == 'x') {
                     turn.setBlackDefends(true);
-                    c = notation.getWhiteTurnNotation().charAt(1);
-                    nextC = notation.getWhiteTurnNotation().charAt(2);
+                    c = notation.getWhiteTurnNotation().charAt(2);
+                    nextC = notation.getWhiteTurnNotation().charAt(3);
 
-                    if(notation.getWhiteTurnNotation().length() >= 4) {
-                         nextNextC = notation.getWhiteTurnNotation().charAt(3);
+                    if(notation.getWhiteTurnNotation().length() >= 5) {
+                         nextNextC = notation.getWhiteTurnNotation().charAt(4);
                     }
                 }
             } else {
@@ -309,13 +314,13 @@ public class ChessNotationMapper {
                 if(notation.getBlackTurnNotation().length() >= 3) {
                     nextNextC = notation.getBlackTurnNotation().charAt(2);
                 }
-                if(c == 'x') {
+                if(nextC == 'x') {
                     turn.setWhiteDefends(true);
-                    c = notation.getBlackTurnNotation().charAt(1);
-                    nextC = notation.getBlackTurnNotation().charAt(2);
+                    c = notation.getBlackTurnNotation().charAt(2);
+                    nextC = notation.getBlackTurnNotation().charAt(3);
 
-                    if(notation.getBlackTurnNotation().length() >= 4) {
-                        nextNextC = notation.getBlackTurnNotation().charAt(3);
+                    if(notation.getBlackTurnNotation().length() >= 5) {
+                        nextNextC = notation.getBlackTurnNotation().charAt(4);
                     }
                 }
             } else {
@@ -469,21 +474,4 @@ public class ChessNotationMapper {
 
         }
     }
-
-//    private Figure getNonPawnFigure(String figureType, char nextC, Figure figure, boolean isWhite) throws ChessNotationMapperException {
-//        if (isCharacterInRangeFromaToh(nextC)) {
-//            int column = nextC - 'a';
-//            figure = game.getBoard().findFigure(figureType, column, null, isWhite);
-//        } else if (isCharacterInRangeFrom1To8(nextC)) {
-//            int row = nextC - '1';
-//            figure = game.getBoard().findFigure(figureType, null, row, isWhite);
-//        } else {
-//            throw new ChessNotationMapperException();
-//        }
-//
-//        if (figure == null || !figure.getFigureChar().equals(figureType)) {
-//            throw new ChessNotationMapperException();
-//        }
-//        return figure;
-//    }
 }
