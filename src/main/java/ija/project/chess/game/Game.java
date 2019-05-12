@@ -790,6 +790,10 @@ public class Game {
 
     public void setHistory(List<Turn> history) {
         this.history = history;
+        if(turn == null && history.size() > 0) {
+            turn = history.get(historyIndex);
+            markFields();
+        }
     }
 
     public List<Figure> getCapturedFigures() {
