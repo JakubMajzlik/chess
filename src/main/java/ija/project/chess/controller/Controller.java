@@ -115,7 +115,7 @@ public class Controller implements Initializable {
         ChessNotationWriter writer = null;
         try {
             Game game = gameList.get(tabPane.getSelectionModel().getSelectedIndex());
-            ChessNotationMapper mapper = new ChessNotationMapper(game);
+            ChessNotationMapper mapper = new ChessNotationMapper();
             writer = new ChessNotationWriter(file);
 
             for(Turn turn :game.getHistory()) {

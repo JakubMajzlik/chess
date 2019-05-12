@@ -26,24 +26,44 @@ public class Queen extends AbstractFigure {
         if( fieldCol == moveToCol && fieldRow == moveToRow) return false;
 
         if( fieldCol == moveToCol) {
-            //inkrementujeme row az pokial sa row == movetorow
-            for(int row = fieldRow + 1; row <= moveToRow; row++) {
-                //vrati figuru ktora stoji vezi v ceste
-                if (field.getBoard().getField(moveToCol, row).get() != null ){
-                    //ak naslo figuru az na konci cesty
-                    if(row == moveToRow) {
-                        //ak je to enmy figura
-                        if(checkIfFieldContainsEnemyFigure(moveToCol, row)) {
-                            //vzhodi a spravi presuun
-                            return true;
+            if(fieldRow < moveToCol) {
+                for(int row = fieldRow + 1; row <= moveToRow; row++) {
+                    //vrati figuru ktora stoji vezi v ceste
+                    if (field.getBoard().getField(moveToCol, row).get() != null ){
+                        //ak naslo figuru az na konci cesty
+                        if(row == moveToRow) {
+                            //ak je to enmy figura
+                            if(checkIfFieldContainsEnemyFigure(moveToCol, row)) {
+                                //vzhodi a spravi presuun
+                                return true;
+                            } else {
+                                return false;
+                            }
                         } else {
                             return false;
                         }
-                    } else {
-                        return false;
+                    }
+                }
+            } else {
+                for(int row = fieldRow - 1; row >= moveToRow; row--) {
+                    //vrati figuru ktora stoji vezi v ceste
+                    if (field.getBoard().getField(moveToCol, row).get() != null ){
+                        //ak naslo figuru az na konci cesty
+                        if(row == moveToRow) {
+                            //ak je to enmy figura
+                            if(checkIfFieldContainsEnemyFigure(moveToCol, row)) {
+                                //vzhodi a spravi presuun
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        } else {
+                            return false;
+                        }
                     }
                 }
             }
+
             //nic nestoji v ceste srpavi len presun
             return moveTo.put(this);
         }else if(fieldRow == moveToRow) {
