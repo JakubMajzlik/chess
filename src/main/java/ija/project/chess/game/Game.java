@@ -389,15 +389,10 @@ public class Game {
                 setWhiteTurn(false);
 
                 Figure figure = turn.getWhiteFigure();
-                //Figure figure = board.getField(turn.getWhiteFigure().getField().getCol(), turn.getWhiteFigure().getField().getRow()).get();
+
                 Field sourceField = turn.getWhiteSourceField();
                 Field destinationField = turn.getWhiteDestinationField();
 
-//                if(board.getField(destinationField.getCol(),destinationField.getRow()).get() != null) {
-//                    turn.getWhiteDestinationField().setFigure(board.getField(destinationField.getCol(),destinationField.getRow()).get());
-//                }
-
-                //figure.move(board.getField(destinationField.getCol(),destinationField.getRow()));
                 if( board.getField(destinationField.getCol(),destinationField.getRow()).get() != null) {
 
                     ((GridPane)content.getCenter()).getChildren().
@@ -417,16 +412,11 @@ public class Game {
             } else if(turn.getBlackFigure() != null) {
                 setWhiteTurn(true);
 
-               // Figure figure = board.getField(turn.getBlackFigure().getField().getCol(), turn.getBlackFigure().getField().getRow()).get();
-               Figure figure = turn.getBlackFigure();
+                Figure figure = turn.getBlackFigure();
                 Field sourceField = turn.getBlackSourceField();
                 Field destinationField = turn.getBlackDestinationField();
 
-//                if(board.getField(destinationField.getCol(),destinationField.getRow()).get() != null) {
-//                    turn.getBlackDestinationField().setFigure(board.getField(destinationField.getCol(),destinationField.getRow()).get());
-//                }
 
-                //figure.move(board.getField(destinationField.getCol(),destinationField.getRow()));
                 if( board.getField(destinationField.getCol(),destinationField.getRow()).get() != null) {
 
                     ((GridPane)content.getCenter()).getChildren().
@@ -486,9 +476,10 @@ public class Game {
                 Figure enemyKing = getBoard().findFigure("K", null, null, null, !isWhiteTurn());
 
                 boolean isCheck = isCheck(enemyKing);
+                boolean allyCheck = isCheck(king);
                 boolean isCheckMate = isCheckMate(enemyKing);
 
-                if(!isCheck && !isCheck(king)) getCheckOrCheckMateText().setVisible(false);
+                if(!isCheck && !allyCheck) getCheckOrCheckMateText().setVisible(false);
 
                 if(figure.isWhite()) {
                     turn = new Turn();
@@ -566,7 +557,6 @@ public class Game {
     }
 
     // TODO: otestovat
-    //TODO: pridat tuto kontrolo pu tahu
     public boolean isCheck(Field checkField, Figure king) {
         return isCheck(checkField, king, new ArrayList<Figure>());
     }
@@ -594,7 +584,6 @@ public class Game {
     }
 
     //TODO: otestovat
-    //TODO: pridat tuto kontrolo pu tahu
     public boolean isCheckMate(Figure king) {
         Field checkField = king.getField();
 
@@ -630,17 +619,64 @@ public class Game {
                     }
                 }
 
-                for(Figure allyFigure : allyFigureList) {
-                    for(Field enemySurrounding : enemyFigure.getField().getSurrouding()) {
-                        if(enemySurrounding != null) {
-                            if(allyFigure.canMove(enemySurrounding)) {
-                                List<Figure> excludedFigure  = new ArrayList<>();
-                                excludedFigure.add(enemyFigure);
-                                if(!isCheck(checkField, king, excludedFigure)) return false;
-                            }
-                        }
+                Field enemyDeffField = null;
+                Field kingDeffField = null;
+                Field enemyField = enemyFigure.getField();
+                Field kingField = king.getField();
 
+                if(enemyField.getRow() == kingField.getRow()) {
+                    if(enemyField.getCol() < kingField.getCol()) {
+                        enemyDeffField = enemyField.nextField(Field.Direction.R);
+                        kingDeffField = kingField.nextField(Field.Direction.L);
+                    } else {
+                        enemyDeffField = enemyField.nextField(Field.Direction.L);
+                        kingDeffField = kingField.nextField(Field.Direction.R);
                     }
+                } else if(enemyField.getCol() == kingField.getCol()) {
+                    if(enemyField.getRow() < kingField.getRow()) {
+                        enemyDeffField = enemyField.nextField(Field.Direction.U);
+                        kingDeffField = kingField.nextField(Field.Direction.D);
+                    } else {
+                        enemyDeffField = enemyField.nextField(Field.Direction.D);
+                        kingDeffField = kingField.nextField(Field.Direction.U);
+                    }
+                } else if(enemyField.getCol() < kingField.getCol()) {
+                    if(enemyField.getRow() < kingField.getRow()) {
+                        enemyDeffField = enemyField.nextField(Field.Direction.RU);
+                        kingDeffField = kingField.nextField(Field.Direction.LD);
+                    } else {
+                        enemyDeffField = enemyField.nextField(Field.Direction.RD);
+                        kingDeffField = kingField.nextField(Field.Direction.LU);
+                    }
+                } else if(enemyField.getCol() > kingField.getCol()) {
+                    if(enemyField.getRow() < kingField.getRow()) {
+                        enemyDeffField = enemyField.nextField(Field.Direction.LU);
+                        kingDeffField = kingField.nextField(Field.Direction.RD);
+                    } else {
+                        enemyDeffField = enemyField.nextField(Field.Direction.LD);
+                        kingDeffField = kingField.nextField(Field.Direction.RU);
+                    }
+                }
+
+                allyFigureList.remove(king);
+
+                for(Figure allyFigure : allyFigureList) {
+                    if(enemyDeffField != null) {
+                        if(allyFigure.canMove(enemyDeffField)) {
+                            List<Figure> excludedFigure  = new ArrayList<>();
+                            excludedFigure.add(enemyFigure);
+                            if(!isCheck(checkField, king, excludedFigure)) return false;
+                        }
+                    }
+
+                    if(kingDeffField != null) {
+                        if(allyFigure.canMove(kingDeffField)) {
+                            List<Figure> excludedFigure  = new ArrayList<>();
+                            excludedFigure.add(enemyFigure);
+                            if(!isCheck(checkField, king, excludedFigure)) return false;
+                        }
+                    }
+
                 }
             }
         }
