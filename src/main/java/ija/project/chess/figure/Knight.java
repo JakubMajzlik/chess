@@ -31,16 +31,36 @@ public class Knight extends AbstractFigure {
         int moveToCol = moveTo.getCol();
         int moveToRow = moveTo.getRow();
 
-        if( fieldCol == moveToCol && fieldRow == moveToRow) return false;
+        boolean makeMove = false;
 
-        int checkCol = Math.abs(fieldCol - moveToCol);
-        int checkRow = Math.abs(fieldRow - moveToRow);
 
-        //nemam to overene ale nenasiel som priklad kde by to neplatilo
-        if(checkCol == 1 && checkRow == 2 || checkCol == 2 && checkRow == 1);
-        else return false;
+        int possibleCol = fieldCol + 2;
+        int possibleRow = fieldRow - 1;
 
-        return true;
+        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
+        possibleRow = fieldRow + 1;
+        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
+        //moznsti na druhom riadku
+        possibleCol = fieldCol + 1;
+        possibleRow = fieldRow - 2;
+        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
+        possibleRow = fieldRow + 2;
+        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
+        //moznsti na tretom riadku
+        possibleCol = fieldCol - 1;
+        possibleRow = fieldRow - 2;
+        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
+        possibleRow = fieldRow + 2;
+        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
+        //moznsti na stvrtom riadku
+        possibleCol = fieldCol - 2;
+        possibleRow = fieldRow - 1;
+        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
+        possibleRow = fieldRow + 1;
+        if(possibleCol == moveToCol && possibleRow == moveToRow) makeMove = true;
+
+
+        return makeMove;
     }
     
 }

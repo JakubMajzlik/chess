@@ -26,7 +26,7 @@ public class Queen extends AbstractFigure {
         if( fieldCol == moveToCol && fieldRow == moveToRow) return false;
 
         if( fieldCol == moveToCol) {
-            if(fieldRow < moveToCol) {
+            if(fieldRow < moveToRow) {
                 for(int row = fieldRow + 1; row <= moveToRow; row++) {
                     //vrati figuru ktora stoji vezi v ceste
                     if (field.getBoard().getField(moveToCol, row).get() != null ){
@@ -67,19 +67,36 @@ public class Queen extends AbstractFigure {
             //nic nestoji v ceste srpavi len presun
             return moveTo.put(this);
         }else if(fieldRow == moveToRow) {
-            for(int col = fieldCol+1; col <= moveToCol; col++) {
-                if (field.getBoard().getField(col, moveToRow).get() != null) {
-                    if(col == moveToCol) {
-                        if(checkIfFieldContainsEnemyFigure(col, moveToRow)) {
-                            return true;
+            if(fieldCol < moveToCol) {
+                for(int col = fieldCol+1; col <= moveToCol; col++) {
+                    if (field.getBoard().getField(col, moveToRow).get() != null) {
+                        if(col == moveToCol) {
+                            if(checkIfFieldContainsEnemyFigure(col, moveToRow)) {
+                                return true;
+                            } else {
+                                return false;
+                            }
                         } else {
                             return false;
                         }
-                    } else {
-                        return false;
+                    }
+                }
+            } else {
+                for(int col = fieldCol-1; col >= moveToCol; col--) {
+                    if (field.getBoard().getField(col, moveToRow).get() != null) {
+                        if(col == moveToCol) {
+                            if(checkIfFieldContainsEnemyFigure(col, moveToRow)) {
+                                return true;
+                            } else {
+                                return false;
+                            }
+                        } else {
+                            return false;
+                        }
                     }
                 }
             }
+
             return true;
         } else {
             return false;

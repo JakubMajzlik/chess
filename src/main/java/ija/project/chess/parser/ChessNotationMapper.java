@@ -238,7 +238,7 @@ public class ChessNotationMapper {
                 break;
 
             default:
-                if(c >= 'a' && c <= 'g'){
+                if(isCharacterInRangeFromaToh(c)){
                     int column = c - 'a';
 
                     if(isCharacterInRangeFrom1To8(nextC)) {
@@ -418,11 +418,11 @@ public class ChessNotationMapper {
     }
 
     private boolean isCharacterInRangeFromaToh(char c) {
-        return c >= 'a' && c <= 'g';
+        return c >= 'a' && c <= 'h';
     }
 
     private boolean isCharacterInRangeFrom1To8(char c) {
-        return c > '0' && c< '9';
+        return c >= '1' && c<= '8';
     }
 
     private void setFigure(Turn turn, boolean isWhite, Figure figure) {

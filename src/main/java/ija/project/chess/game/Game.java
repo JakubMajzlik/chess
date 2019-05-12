@@ -647,7 +647,7 @@ public class Game {
         for(Field field : kingsPossibleMovement) {
             if(field == null) continue;
 
-            if(!isCheck(checkField, king)) return false;
+            if(!isCheck(field, king)) return false;
         }
 
         for(Figure enemyFigure : enemyFigureList) {
