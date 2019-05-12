@@ -363,11 +363,45 @@ public class ChessNotationMapper {
                     }
                 } else if(isCharacterInRangeFrom1To8(nextC)) {
                     if(isWhite) {
-                        if(!turn.getWhiteFigure().canMove(board.getField(c- 'a', nextC - '1')))
-                        throw new ChessNotationMapperException();
+                        if(!turn.getWhiteFigure().canMove(board.getField(c- 'a', nextC - '1'))) {
+                            throw new ChessNotationMapperException();
+                        }
+                        if(turn.getWhiteFigure().getFigureChar() == "p") {
+                            if(nextC - '1' == 7) {
+                                Figure newFigure = null;
+                                for (Figure figure : board.getCapturedFigures()) {
+                                    if(figure.getFigureChar().equals(Character.toString(nextNextC))) {
+                                        if(figure.isWhite() == isWhite) {
+                                            newFigure = figure;
+                                        }
+                                    }
+                                }
+                                if(newFigure == null) {
+                                    throw new ChessNotationMapperException();
+                                }
+                                turn.setWhitePawnUpgradesTo(newFigure);
+                            }
+                        }
                     } else {
-                        if(!turn.getBlackFigure().canMove(board.getField(c- 'a', nextC - '1')))
-                        throw new ChessNotationMapperException();
+                        if(!turn.getBlackFigure().canMove(board.getField(c- 'a', nextC - '1'))) {
+                            throw new ChessNotationMapperException();
+                        }
+                        if(turn.getBlackFigure().getFigureChar() == "p") {
+                            if(nextC - '1' == 7) {
+                                Figure newFigure = null;
+                                for (Figure figure : board.getCapturedFigures()) {
+                                    if(figure.getFigureChar().equals(Character.toString(nextNextC))) {
+                                        if(figure.isWhite() == isWhite) {
+                                            newFigure = figure;
+                                        }
+                                    }
+                                }
+                                if(newFigure == null) {
+                                    throw new ChessNotationMapperException();
+                                }
+                                turn.setBlackPawnUpgradesTo(newFigure);
+                            }
+                        }
                     }
 
                     setSourceAndDestination(turn, isWhite, c, nextC);
@@ -451,6 +485,10 @@ public class ChessNotationMapper {
 
             turn.setWhiteDestinationField(destinationField);
 
+            if(destinationField.get() != null) {
+                board.getCapturedFigures().add(destinationField.get());
+            }
+
 
             board.getField(turn.getWhiteFigure().getField().getCol(), turn.getWhiteFigure().getField().getRow()).setFigure(null);
             board.getField(column - 'a', row - '1').setFigure(turn.getWhiteFigure());
@@ -467,6 +505,10 @@ public class ChessNotationMapper {
             destinationField.setFigure(board.getField(column - 'a', row - '1').get());
 
             turn.setBlackDestinationField(destinationField);
+
+            if(destinationField.get() != null) {
+                board.getCapturedFigures().add(destinationField.get());
+            }
 
             board.getField(turn.getBlackFigure().getField().getCol(), turn.getBlackFigure().getField().getRow()).setFigure(null);
             board.getField(column - 'a', row - '1').setFigure(turn.getBlackFigure());

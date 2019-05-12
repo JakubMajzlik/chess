@@ -36,11 +36,6 @@ public class Game {
 
     private List<Figure> capturedFigures = new ArrayList<>();
 
-    private Field sourceMarkField = null;
-    private ImageView originalSourceMarkFieldBackground = null;
-    private Field destinationMarkField = null;
-    private ImageView originalDestinationMarkFieldBackground = null;
-
     private BorderPane content = new BorderPane();
     private VBox notationsBox;
     private VBox figuresForChange;

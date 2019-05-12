@@ -5,6 +5,9 @@ import ija.project.chess.figure.Figure;
 import ija.project.chess.game.Game;
 import javafx.scene.image.ImageView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Board {
 
     int size;
@@ -12,6 +15,8 @@ public class Board {
     Field[][] field;
 
     Field startField;
+
+    private List<Figure> capturedFigures = new ArrayList<>();
 
     private Game game;
 
@@ -113,5 +118,13 @@ public class Board {
 
     public void setGame(Game game) {
         this.game = game;
+    }
+
+    public List<Figure> getCapturedFigures() {
+        return capturedFigures;
+    }
+
+    public void setCapturedFigures(List<Figure> capturedFigures) {
+        this.capturedFigures = capturedFigures;
     }
 }
