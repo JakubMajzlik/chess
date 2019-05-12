@@ -343,6 +343,13 @@ public class ChessNotationMapper {
                 if(isCharacterInRangeFromaToh(nextC)) {
                     if(nextNextC > 0) {
                         if(isCharacterInRangeFrom1To8(nextNextC)) {
+                            if(isWhite) {
+                                if(!turn.getWhiteFigure().canMove(board.getField(nextC- 'a', nextNextC - '1')))
+                                throw new ChessNotationMapperException();
+                            } else {
+                                if(!turn.getBlackFigure().canMove(board.getField(nextC- 'a', nextNextC - '1')))
+                                throw new ChessNotationMapperException();
+                            }
                             setSourceAndDestination(turn, isWhite, nextC, nextNextC);
 
                         } else {
@@ -350,6 +357,14 @@ public class ChessNotationMapper {
                         }
                     }
                 } else if(isCharacterInRangeFrom1To8(nextC)) {
+                    if(isWhite) {
+                        if(!turn.getWhiteFigure().canMove(board.getField(c- 'a', nextC - '1')))
+                        throw new ChessNotationMapperException();
+                    } else {
+                        if(!turn.getBlackFigure().canMove(board.getField(c- 'a', nextC - '1')))
+                        throw new ChessNotationMapperException();
+                    }
+
                     setSourceAndDestination(turn, isWhite, c, nextC);
                 }
             }
@@ -359,6 +374,13 @@ public class ChessNotationMapper {
                 if(isCharacterInRangeFromaToh(nextC)) {
                     if(nextNextC > 0) {
                         if(isCharacterInRangeFrom1To8(nextNextC)) {
+                            if(isWhite) {
+                                if(!turn.getWhiteFigure().canMove(board.getField(nextC- 'a', nextNextC - '1')))
+                                throw new ChessNotationMapperException();
+                            } else {
+                                if(!turn.getBlackFigure().canMove(board.getField(nextC- 'a', nextNextC - '1')))
+                                throw new ChessNotationMapperException();
+                            }
                             setSourceAndDestination(turn, isWhite, nextC, nextNextC);
                         } else {
                             throw new ChessNotationMapperException();
