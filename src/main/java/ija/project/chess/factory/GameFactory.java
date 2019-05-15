@@ -6,6 +6,9 @@ import ija.project.chess.game.Game;
 
 public abstract class GameFactory {
 
+    /**
+    *   Vytvori novy objekt hry
+    */
     public static Game createChessGame(Board board) {
 
         if(board.getSize() != 8) {

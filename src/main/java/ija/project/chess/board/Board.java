@@ -7,7 +7,9 @@ import javafx.scene.image.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/**
+Trieda, ktora reprezentuje hraciu plochu
+ */
 public class Board {
 
     int size;
@@ -26,18 +28,18 @@ public class Board {
             for (int col = 0; col < size; col++) {
                 Field boardField = new Field(col, row);
                 boardField.setBoard(this);
-
+                
                 if(row % 2 == 0) {
                     if(col % 2 == 0) {
-                        boardField.setBackground(new ImageView("images/white.png"));
+                        boardField.setBackground(new ImageView("/ija/project/chess/images/white.png"));
                     }else {
-                        boardField.setBackground(new ImageView("images/black.png"));
+                        boardField.setBackground(new ImageView("/ija/project/chess/images/black.png"));
                     }
                 } else {
                     if(col % 2 == 1) {
-                        boardField.setBackground(new ImageView("images/white.png"));
+                        boardField.setBackground(new ImageView("/ija/project/chess/images/white.png"));
                     } else {
-                        boardField.setBackground(new ImageView("images/black.png"));
+                        boardField.setBackground(new ImageView("/ija/project/chess/images/black.png"));
                     }
                 }
 
@@ -66,6 +68,12 @@ public class Board {
         this.size = size;
     }
 
+    /**
+    *   Vrati policko, ktore sa nachadza na zadanej suradnici
+    *   @param col Stlpec
+    *   @param row Riadok
+    *   @return Field
+    */
     public Field getField(int col, int row) {
         if(col > size - 1  || col < 0
                 || row > size - 1  || row < 0) {
@@ -78,6 +86,14 @@ public class Board {
         return size;
     }
 
+    /**
+    *   Najde figurku na ploche urciteho typu
+    *   @param figureType Typ figurky
+    *   @param column Stlpec na ktorom sa ma figurka nachadzat, moze byt null
+    *   @param row Riadok, na ktorom sa ma figurka nachadzat, moze byt null
+    *   @param canMoveTo Policko, na ktore sa moze figurka dostat, moze byt null
+    *   @param isWhite Farba figurky
+    */
     public Figure findFigure(String figureType, Integer column, Integer row, Field canMoveTo, boolean isWhite) {
         Figure figure = null;
 

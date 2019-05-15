@@ -16,6 +16,10 @@ public class Queen extends AbstractFigure {
         return canDoTowerMove(moveTo) || canDoBishopMove(moveTo);
     }
 
+    /**
+    *   Skontroluje, ci sa figurka moze pohnut
+    *   @param moveTo Policko kde sa ma pohnut
+    */
     private boolean canDoTowerMove (Field moveTo) {
         int fieldCol = field.getCol();
         int fieldRow = field.getRow();
@@ -65,7 +69,7 @@ public class Queen extends AbstractFigure {
             }
 
             //nic nestoji v ceste srpavi len presun
-            return moveTo.put(this);
+            return true;
         }else if(fieldRow == moveToRow) {
             if(fieldCol < moveToCol) {
                 for(int col = fieldCol+1; col <= moveToCol; col++) {
@@ -103,6 +107,10 @@ public class Queen extends AbstractFigure {
         }
     }
 
+    /**
+    *   Skontroluje, ci sa figurka moze pohnut
+    *   @param moveTo Policko kde sa ma pohnut
+    */
     private boolean canDoBishopMove(Field moveTo) {
         int fieldCol = field.getCol();
         int fieldRow = field.getRow();

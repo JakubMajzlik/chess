@@ -38,7 +38,11 @@ public class Controller implements Initializable {
     private List<Game> gameList = new ArrayList<>();
 
     @FXML
+    /**
+    *   Vytvori novu hru
+    */
     public void newGame(ActionEvent event) {
+
         Board board = new Board(8);
         Game game = GameFactory.createChessGame(board);
         board.setGame(game);
@@ -58,6 +62,9 @@ public class Controller implements Initializable {
     }
 
     @FXML
+    /**
+    *   Otvori hru
+    */
     public void openGame(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
 
@@ -116,6 +123,9 @@ public class Controller implements Initializable {
     }
 
     @FXML
+    /**
+    *   Ulozi hru
+    */
     public void saveGame(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
         FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Chess notation", "*.chess");
@@ -142,17 +152,11 @@ public class Controller implements Initializable {
     }
 
     @FXML
+    /**
+    *   Ukonci hru
+    */
     public void quitGame(ActionEvent event) {
         System.exit(0);
-    }
-
-    @FXML
-    public void showAbout() {
-        final Alert aboutAppAlert = new Alert(Alert.AlertType.NONE);
-        aboutAppAlert.setContentText("Test");
-        aboutAppAlert.show();
-        // TODO: Ukoncenie
-        aboutAppAlert.setOnCloseRequest(e -> aboutAppAlert.close());
     }
 
     public void initialize(URL location, ResourceBundle resources) {

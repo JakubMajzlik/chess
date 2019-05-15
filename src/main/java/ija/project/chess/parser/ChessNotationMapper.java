@@ -29,6 +29,9 @@ public class ChessNotationMapper {
 
     }
 
+    /**
+    *   Vymeni hernu plochu z adocasnu novu plochu
+    */
     public void replaceBoard() {
         for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -47,6 +50,9 @@ public class ChessNotationMapper {
         }
     }
 
+    /**
+    *   Obnovy originalnu plochu
+    */
     public void recoverBoard() {
         /*for (int i = 0; i < 8; i++) {
             for (int j = 0; j < 8; j++) {
@@ -63,6 +69,9 @@ public class ChessNotationMapper {
         }));
     }
 
+    /**
+    *   Vrati tah na zalade notacie
+    */
     public Turn getTurn(ChessTurnNotation notation) throws ChessNotationMapperException {
         Turn turn = new Turn();
 
@@ -81,6 +90,9 @@ public class ChessNotationMapper {
         return turn;
     }
 
+    /**
+    *   Vrati notaciu na zaklade tahu
+    */
     public ChessTurnNotation getNotation(Turn turn) {
         ChessTurnNotation notation = new ChessTurnNotation();
         StringBuilder whiteNotation = new StringBuilder();
@@ -152,6 +164,9 @@ public class ChessNotationMapper {
         return notation;
     }
 
+    /**
+    *   Nastavi atribbuty tahu
+    */
     private void setTurnAttributes(ChessTurnNotation notation, Turn turn, boolean isWhite) throws ChessNotationMapperException {
 
         // Figure type
@@ -164,6 +179,9 @@ public class ChessNotationMapper {
         turn = checkCheckOrCheckMate(turn, notation, isWhite);
     }
 
+    /**
+    *   NAstavy typ figurky
+    */
     private Turn getFigure(Turn turn, ChessTurnNotation notation, boolean isWhite) throws ChessNotationMapperException {
         char c;
         char nextC;
@@ -267,6 +285,9 @@ public class ChessNotationMapper {
         return turn;
     }
 
+    /**
+    *   Nastavy zdrojove a cielove policko
+    */
     private Turn getDestination(Turn turn, ChessTurnNotation notation, boolean isWhite) throws ChessNotationMapperException {
         //TODO: priradit rozumne mena premennych + kontrola na dlzku??
         char c;
@@ -437,7 +458,9 @@ public class ChessNotationMapper {
     }
 
 
-
+    /**
+    * Skontroluje sach a sachmat
+    */
     private Turn checkCheckOrCheckMate(Turn turn, ChessTurnNotation notation, boolean isWhite) {
         if(isWhite) {
             if(notation.getWhiteTurnNotation().endsWith("#")) {

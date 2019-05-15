@@ -29,6 +29,11 @@ public class Field {
         this.row = row;
     }
 
+    /**
+    *   Prida policko v urcitom smere od aktualneho policka
+    *   @param dirs Smer
+    *   @param field Policko, ktore sa prida
+    */
     public void addNextField(Direction dirs, Field field) {
         switch(dirs) {
             case D:
@@ -80,6 +85,10 @@ public class Field {
         return figure == null;
     }
 
+    /**
+    *   Polozi figurku na policko
+    *   @param figure Figurka
+    */
     public boolean put(Figure figure) {
         if(this.figure != null) {
             if(figure.getField() != null) {
@@ -106,6 +115,10 @@ public class Field {
         return true;
     }
 
+    /**
+    *   Odstrani figurku z policka
+    *   @param figure Figurka na odstranenie
+    */
     public boolean remove(Figure figure) {
         if(this.figure == null) {
             //figure.setField(null);
@@ -130,6 +143,11 @@ public class Field {
         return figure;
     }
 
+    /**
+    *   Vrati policko, ktore sa nachadza v urcitom smere od aktualneho policka
+    *   @param dirs Smer
+    *   @return Policko
+    */
     public Field nextField(Field.Direction dirs) {
         switch(dirs) {
             case D:
@@ -154,6 +172,9 @@ public class Field {
         return null;
     }
 
+    /**
+    *   Zachitava udalosti kliknutia
+    */
     public void handleEvents() {
         background.setOnMouseClicked(e -> {
             Game game = this.board.getGame();

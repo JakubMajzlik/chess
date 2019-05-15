@@ -20,44 +20,44 @@ public abstract class AbstractFigure implements Figure{
         switch(figureChar) {
             case "p":
                 if(isWhite) {
-                    image = new ImageView("images/wpawn.png");
+                    image = new ImageView("/ija/project/chess/images/wpawn.png");
                 } else {
-                    image = new ImageView("images/bpawn.png");
+                    image = new ImageView("/ija/project/chess/images/bpawn.png");
                 }
                 break;
             case "K":
                 if(isWhite) {
-                    image = new ImageView("images/wking.png");
+                    image = new ImageView("/ija/project/chess/images/wking.png");
                 } else {
-                    image = new ImageView("images/bking.png");
+                    image = new ImageView("/ija/project/chess/images/bking.png");
                 }
                 break;
             case "D":
                 if(isWhite) {
-                    image = new ImageView("images/wqueen.png");
+                    image = new ImageView("/ija/project/chess/images/wqueen.png");
                 } else {
-                    image = new ImageView("images/bqueen.png");
+                    image = new ImageView("/ija/project/chess/images/bqueen.png");
                 }
                 break;
             case "S":
                 if(isWhite) {
-                    image = new ImageView("images/wbishop.png");
+                    image = new ImageView("/ija/project/chess/images/wbishop.png");
                 } else {
-                    image = new ImageView("images/bbishop.png");
+                    image = new ImageView("/ija/project/chess/images/bbishop.png");
                 }
                 break;
             case "V":
                 if(isWhite) {
-                    image = new ImageView("images/wrook.png");
+                    image = new ImageView("/ija/project/chess/images/wrook.png");
                 } else {
-                    image = new ImageView("images/brook.png");
+                    image = new ImageView("/ija/project/chess/images/brook.png");
                 }
                 break;
             case "J":
                 if(isWhite) {
-                    image = new ImageView("images/wknight.png");
+                    image = new ImageView("/ija/project/chess/images/wknight.png");
                 } else {
-                    image = new ImageView("images/bknight.png");
+                    image = new ImageView("/ija/project/chess/images/bknight.png");
                 }
                 break;
             default:
@@ -68,6 +68,9 @@ public abstract class AbstractFigure implements Figure{
 
     }
 
+    /**
+    *   Zachitava udalosti kliknutia
+    */
     private void handleEvents() {
         image.setOnMouseClicked(e ->{
             Game game = this.field.getBoard().getGame();
@@ -121,6 +124,11 @@ public abstract class AbstractFigure implements Figure{
         return stateMessage.toString();
     }
 
+    /**
+    *   Vyhodi superovu figurku
+    *   @param col stlpec
+    *   @param row raidok
+    */
     protected boolean capture(int col, int row) {
         Board board = field.getBoard();
         Figure figureToRemove = board.getField(col, row).get();
@@ -131,6 +139,11 @@ public abstract class AbstractFigure implements Figure{
         return false;
     }
 
+    /**
+    *   Skontroluje, ci sa na zadanej suradnici nachadza protihrac
+    *   @param col stlpec
+    *   @param row raidok
+    */
     protected boolean checkIfFieldContainsEnemyFigure(int col, int row) {
         Figure figureAtField = field.getBoard().getField(col, row).get();
         if(figureAtField != null) {
@@ -153,6 +166,9 @@ public abstract class AbstractFigure implements Figure{
     }
 
 
+    /**
+    *   Pohne s figurkou
+    */
     public boolean move(Field moveTo) {
         int moveToCol = moveTo.getCol();
         int moveToRow = moveTo.getRow();

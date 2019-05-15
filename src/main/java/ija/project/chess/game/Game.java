@@ -62,8 +62,8 @@ public class Game {
 
     public Game(Board board) {
         this.board = board;
-        markedSourceBg = new ImageView("images/markedbg.png");
-        markedDestinationBg = new ImageView("images/markedbg.png");
+        markedSourceBg = new ImageView("/ija/project/chess/images/markedbg.png");
+        markedDestinationBg = new ImageView("/ija/project/chess/images/markedbg.png");
         initializeGameBoardUI();
     }
 
@@ -75,6 +75,9 @@ public class Game {
         this.autoPlaySpeedInSeconds = autoPlaySpeedInSeconds;
     }
 
+    /**
+    *   Inicializuje UI
+    */
     private void initializeGameBoardUI() {
         // TOP PANEL
         HBox topPanel = new HBox();
@@ -277,15 +280,15 @@ public class Game {
     public void showFiguresForChange(boolean isWhile) {
         String prefix = isWhile ? "w" : "b";
 
-        rookImage.setImage(new Image("images/" + prefix + "rook.png"));
+        /*rookImage.setImage(new Image("images/" + prefix + "rook.png"));
         bishopImage.setImage(new Image("images/" + prefix + "bishop.png"));
         knightImage.setImage(new Image("images/" + prefix + "knight.png"));
         queenImage.setImage(new Image("images/" + prefix + "queen.png"));
 
-        figuresForChange.setVisible(true);
+        figuresForChange.setVisible(true);*/
     }
 
-    public void hideFiguresForChange() {figuresForChange.setVisible(false);}
+      public void hideFiguresForChange() {figuresForChange.setVisible(false);}
 
     public void handleiguresForChangeEvents() {
         rookImage.setOnMouseClicked(e -> {
@@ -326,6 +329,9 @@ public class Game {
         return null;
     }
 
+    /**
+    *   Oznaci policka, kde bude prebiehat tah
+    */
     private void markFields() {
         removeMarkedFields();
 
@@ -350,6 +356,9 @@ public class Game {
         }
     }
 
+    /**
+    *   Vymaze oznacenie policok
+    */
     private void removeMarkedFields() {
 
         ((GridPane)content.getCenter()).getChildren().remove(markedSourceBg);
@@ -359,6 +368,9 @@ public class Game {
 
     }
 
+    /**
+    * Vratii hru o 1 krok zpet
+    */
     public void backward() {
         if(isWhiteTurn()) {
             historyIndex--;
@@ -391,10 +403,10 @@ public class Game {
             }
 
             // Vypis natacie vlavo
-            ChessNotationMapper mapper = new ChessNotationMapper();
-            ChessTurnNotation notation = mapper.getNotation(turn);
-            Text notationText = (Text) notationsBox.getChildren().get(notationsBox.getChildren().size() - 1);
-            notationText.setText(notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation());
+//            ChessNotationMapper mapper = new ChessNotationMapper();
+//            ChessTurnNotation notation = mapper.getNotation(turn);
+//            Text notationText = (Text) notationsBox.getChildren().get(notationsBox.getChildren().size() - 1);
+//            notationText.setText(notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation());
 
         } else {
 
@@ -425,13 +437,16 @@ public class Game {
                 checktext.setVisible(false);
             }
 
-            notationsBox.getChildren().remove(notationsBox.getChildren().size() - 1);
+            //notationsBox.getChildren().remove(notationsBox.getChildren().size() - 1);
 
         }
 
         markFields();
     }
 
+    /**
+    *   Posunie hru o 1 krok dopredu
+    */
     public void forward() {
         if(historyIndex < history.size()) {
             if(isWhiteTurn()) {
@@ -467,11 +482,11 @@ public class Game {
                 board.getField(sourceField.getCol(),sourceField.getRow()).setFigure(null);
 
                 // Vypis natacie vlavo
-                ChessNotationMapper mapper = new ChessNotationMapper();
-                ChessTurnNotation notation = mapper.getNotation(turn);
-                Text notationText = new Text( notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation() + " ");
-                notationText.setFont(Font.font("Arial", 20));
-                notationsBox.getChildren().add(notationText);
+//                ChessNotationMapper mapper = new ChessNotationMapper();
+//                ChessTurnNotation notation = mapper.getNotation(turn);
+//                Text notationText = new Text( notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation() + " ");
+//                notationText.setFont(Font.font("Arial", 20));
+//                notationsBox.getChildren().add(notationText);
 
             } else if(turn.getBlackFigure() != null) {
                 setWhiteTurn(true);
@@ -501,15 +516,15 @@ public class Game {
                 board.getField(sourceField.getCol(),sourceField.getRow()).setFigure(null);
 
                 // Vypis natacie vlavo
-                ChessNotationMapper mapper = new ChessNotationMapper();
-                ChessTurnNotation notation = mapper.getNotation(turn);
-                Text notationText = (Text) notationsBox.getChildren().get(notationsBox.getChildren().size() - 1);
-                notationText.setText(notationText.getText() + notation.getBlackTurnNotation());
-
-                notationText.setOnMouseClicked(e -> {
-                    Text text = (Text)e.getSource();
-                    backTo(text);
-                });
+//                ChessNotationMapper mapper = new ChessNotationMapper();
+//                ChessTurnNotation notation = mapper.getNotation(turn);
+//                Text notationText = (Text) notationsBox.getChildren().get(notationsBox.getChildren().size() - 1);
+//                notationText.setText(notationText.getText() + notation.getBlackTurnNotation());
+//
+//                notationText.setOnMouseClicked(e -> {
+//                    Text text = (Text)e.getSource();
+//                    backTo(text);
+//                });
 
                 historyIndex++;
                 if(historyIndex < history.size()) {
@@ -520,14 +535,30 @@ public class Game {
         markFields();
     }
 
+    /**
+    *   Nastavi historiu na urcity okamih 
+    */
     private void backTo(Text text) {
         int clickedTurnOrder = Integer.parseInt(text.getText().substring(0,text.getText().indexOf('.')));
-        while(historyIndex > clickedTurnOrder || !isWhiteTurn()) {
-            backward();
+        System.out.println(clickedTurnOrder);
+        if(historyIndex > clickedTurnOrder ) {
+            while(historyIndex >= clickedTurnOrder || !isWhiteTurn()) {
+                backward();
+            }
+        } else if(historyIndex < history.size()){
+            while(historyIndex + 1 < clickedTurnOrder || !isWhiteTurn()) {
+                forward();
+            }
         }
+        System.out.println(historyIndex);
         //System.out.println(clickedTurnOrder);
     }
 
+    /**
+    *   Pohne s figurkou
+    *   @param figure figurka
+    *   @param field Policko
+    */
     public boolean move(Figure figure, Field field) {
 
         if(figure.canMove(field)) {
@@ -572,7 +603,26 @@ public class Game {
 
                     if(historyIndex < history.size()) {
                         int historySize = history.size();
-                        history.subList(historyIndex, historySize - 1).clear();
+                        history.subList(historyIndex, historySize).clear();
+
+                        notationsBox.getChildren().clear();
+
+                        for(int i = 0; i < history.size(); i++) {
+                            Turn t = history.get(i);
+                            ChessNotationMapper mapper = new ChessNotationMapper();
+                            ChessTurnNotation notation = mapper.getNotation(t);
+                            Text notationText = new Text(notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation());
+                            notationText.setFont(Font.font("Arial", 20));
+                            if(t.getBlackFigure() != null)
+                                notationText.setText(notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation() + " "+notation.getBlackTurnNotation());
+
+                            notationText.setOnMouseClicked(e -> {
+                                Text text = (Text)e.getSource();
+                                backTo(text);
+                            });
+
+                            notationsBox.getChildren().add(notationText);
+                        }
                     }
 
                     history.add(historyIndex, turn);
@@ -605,18 +655,45 @@ public class Game {
                     if(isCheckMate) turn.setWhiteCheckMate(true);
                     //TODO: dalsie casti notacie
 
+                    boolean cleared = false;
+
                     if(historyIndex  < history.size() - 1) {
                         int historySize = history.size();
-                        history.subList(historyIndex+1, historySize - 1).clear();
+                        history.subList(historyIndex+1, historySize).clear();
+
+                        cleared = true;
+
+                        notationsBox.getChildren().clear();
+
+                        for(int i = 0; i < history.size(); i++) {
+                            Turn t = history.get(i);
+                            ChessNotationMapper mapper = new ChessNotationMapper();
+                            ChessTurnNotation notation = mapper.getNotation(t);
+                            Text notationText = new Text(notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation());
+                            notationText.setFont(Font.font("Arial", 20));
+                            if(t.getBlackFigure() != null)
+                                notationText.setText(notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation() + " "+notation.getBlackTurnNotation());
+
+                            notationText.setOnMouseClicked(e -> {
+                                Text text = (Text)e.getSource();
+                                backTo(text);
+                            });
+
+                            notationsBox.getChildren().add(notationText);
+                        }
+
                     }
 
                     historyIndex++;
 
-                    // Vypis natacie vlavo
-                    ChessNotationMapper mapper = new ChessNotationMapper();
-                    ChessTurnNotation notation = mapper.getNotation(turn);
-                    Text notationText = (Text) notationsBox.getChildren().get(notationsBox.getChildren().size() - 1);
-                    notationText.setText(notationText.getText() + notation.getBlackTurnNotation());
+                    if(!cleared) {
+                        // Vypis natacie vlavo
+                        ChessNotationMapper mapper = new ChessNotationMapper();
+                        ChessTurnNotation notation = mapper.getNotation(turn);
+                        Text notationText = (Text) notationsBox.getChildren().get(notationsBox.getChildren().size() - 1);
+                        notationText.setText(notationText.getText() + notation.getBlackTurnNotation());
+                    }
+
 
                     return true;
                 }
@@ -626,6 +703,9 @@ public class Game {
         return false;
     }
 
+    /**
+    *   Skontroluje sach
+    */
     public boolean isCheck(Figure king) {
         return isCheck(king.getField(), king, new ArrayList<>());
     }
@@ -657,7 +737,9 @@ public class Game {
         return false;
     }
 
-    //TODO: otestovat
+    /**
+    *   Skontroluje Sachmat
+    */
     public boolean isCheckMate(Figure king) {
         Field checkField = king.getField();
 
@@ -781,6 +863,10 @@ public class Game {
         return count == 0;
     }
 
+    /**
+    *   Vrati zoznam vsetkych figurok
+    *   @param isWhite Farba figurok
+    */
     private List<Figure> getAllFigures(boolean isWhite) {
         List<Figure> figureList = new ArrayList<>();
 
@@ -826,6 +912,22 @@ public class Game {
         if(turn == null && history.size() > 0) {
             turn = history.get(historyIndex);
             markFields();
+        }
+        for(int i = 0; i < history.size(); i++) {
+            Turn t = history.get(i);
+            ChessNotationMapper mapper = new ChessNotationMapper();
+            ChessTurnNotation notation = mapper.getNotation(t);
+            Text notationText = new Text(notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation());
+            notationText.setFont(Font.font("Arial", 20));
+            if(t.getBlackFigure() != null)
+                notationText.setText(notation.getTurnOrder() + ". " + notation.getWhiteTurnNotation() + " "+notation.getBlackTurnNotation());
+
+            notationText.setOnMouseClicked(e -> {
+                Text text = (Text)e.getSource();
+                backTo(text);
+            });
+
+            notationsBox.getChildren().add(notationText);
         }
     }
 

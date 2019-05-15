@@ -20,6 +20,9 @@ public class ChessNotationReader {
         fileReader = new FileReader(file);
     }
 
+    /**
+    *   Precita jeden riadok v suvore s notaciamy
+    */
     public ChessTurnNotation getTurnNotation() throws WrongChessNotationFileException {
         StringBuilder turnString = new StringBuilder();
         ChessTurnNotation chessTurnNotation = new ChessTurnNotation();

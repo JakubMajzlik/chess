@@ -8,6 +8,10 @@ public class Pawn extends AbstractFigure {
         super("p", white);
     }
 
+    /**
+    *   Skontroluje, ci sa figurka moze pohnut
+    *   @param moveTo Policko kde sa ma pohnut
+    */
     @Override
     public boolean canMove(Field moveTo) {
 

@@ -12,6 +12,10 @@ public class Rook extends AbstractFigure {
         super("V", white);
     }
 
+    /**
+    *   Skontroluje, ci sa figurka moze pohnut
+    *   @param moveTo Policko kde sa ma pohnut
+    */
     public boolean canMove(Field moveTo) {
         int fieldCol = field.getCol();
         int fieldRow = field.getRow();

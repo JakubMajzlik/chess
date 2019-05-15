@@ -12,6 +12,10 @@ public class Bishop extends AbstractFigure {
     }
 
 
+    /**
+    *   Skontroluje, ci sa figurka moze pohnut
+    *   @param moveTo Policko kde sa ma pohnut
+    */
     @Override
     public boolean canMove(Field moveTo) {
         int fieldCol = field.getCol();

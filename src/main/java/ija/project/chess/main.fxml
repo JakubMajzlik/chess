@@ -20,11 +20,6 @@
             <MenuItem mnemonicParsing="false" onAction="#quitGame" text="Quit" />
           </items>
         </Menu>
-        <Menu mnemonicParsing="false" text="About">
-          <items>
-            <MenuItem mnemonicParsing="false" onAction="#showAbout" text="About application" />
-          </items>
-        </Menu>
       </menus>
     </MenuBar>
       <TabPane fx:id="tabPane" prefHeight="1025.0" prefWidth="1288.0" style="-fx-background-color: #bfc4cc;">

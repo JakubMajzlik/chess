@@ -19,6 +19,9 @@ public class ChessNotationWriter {
         writer = new FileWriter(targetFile);
     }
 
+    /**
+    *   Zapise nnotaciu do suboru
+    */
     public void appendNotation(ChessTurnNotation notation) throws WrongChessNotationException {
         if(notation == null) {
             return;
